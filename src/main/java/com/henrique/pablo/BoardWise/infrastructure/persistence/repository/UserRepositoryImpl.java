@@ -5,8 +5,11 @@ import com.henrique.pablo.BoardWise.domain.repository.IUserRepository;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.User;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Repository
@@ -15,11 +18,13 @@ public class UserRepositoryImpl implements IUserRepository {
 
     private final UserJpaRepository userJpaRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder encoder;
 
     @Override
     public UserModel save(UserModel user) {
+        var passwordEncoder = encoder.encode(user.getPasswordHash());
+        user.setPasswordHash(passwordEncoder);
         User userEntity = userMapper.toEntity(user);
-        System.out.println("UserEntity: " + userEntity);
         userEntity = userJpaRepository.save(userEntity);
         return userMapper.toDomain(userEntity);
     }
@@ -35,6 +40,5 @@ public class UserRepositoryImpl implements IUserRepository {
         return Optional.ofNullable(userJpaRepository.findByEmail(email))
                 .map(userMapper::toDomain);
     }
-
 
 }
