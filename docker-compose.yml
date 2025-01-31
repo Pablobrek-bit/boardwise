@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  board_wise:
+    container_name: board_wise
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '8080:8080'
+    environment:
+     SPRING_DATASOURCE_URL: jdbc:postgresql://board_wise_db:5432/board_wise_db
+     SPRING_DATASOURCE_USERNAME: pablo
+     SPRING_DATASOURCE_PASSWORD: 12345678
+    depends_on:
+      board_wise_db:
+        condition: service_healthy
+    links:
+      - board_wise_db
+    volumes:
+      - .:/usr/app
+
+  # PostgreSQL service
+  board_wise_db:
+    container_name: board_wise_db
+    image: postgres:13
+    environment:
+      POSTGRES_USER: pablo
+      POSTGRES_PASSWORD: 12345678
+      POSTGRES_DB: board_wise_db
+    ports:
+      - '5433:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U pablo -d board_wise_db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+volumes:
+  postgres_data:
