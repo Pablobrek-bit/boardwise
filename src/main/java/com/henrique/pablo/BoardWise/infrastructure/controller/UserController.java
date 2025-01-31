@@ -29,4 +29,9 @@ public class UserController {
         URI location = uriBuilder.path("/users/{id}").buildAndExpand(response.id()).toUri();
         return ResponseEntity.created(location).body(response);
     }
+
+    @GetMapping("/{id}")
+    public UserResponse getUser(@PathVariable String id) {
+        return userService.getUser(id);
+    }
 }

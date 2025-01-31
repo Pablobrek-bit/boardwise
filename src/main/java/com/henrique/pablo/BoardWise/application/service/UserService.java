@@ -31,4 +31,10 @@ public class UserService {
 
         return new UserResponse(user.getId(), user.getUsername(), user.getEmail(), user.getCreatedAt());
     }
+
+    public UserResponse getUser(String id){
+        return userRepository.findById(id)
+                .map(user -> new UserResponse(user.getId(), user.getUsername(), user.getEmail(), user.getCreatedAt()))
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
 }
