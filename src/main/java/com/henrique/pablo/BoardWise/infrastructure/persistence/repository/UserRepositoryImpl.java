@@ -29,4 +29,12 @@ public class UserRepositoryImpl implements IUserRepository {
         return userJpaRepository.findById(id)
                 .map(userMapper::toDomain);
     }
+
+    @Override
+    public Optional<UserModel> findByEmail(String email) {
+        return Optional.ofNullable(userJpaRepository.findByEmail(email))
+                .map(userMapper::toDomain);
+    }
+
+
 }
