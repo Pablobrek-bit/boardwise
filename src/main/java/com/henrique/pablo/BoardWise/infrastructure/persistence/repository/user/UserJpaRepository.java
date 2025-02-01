@@ -1,4 +1,4 @@
-package com.henrique.pablo.BoardWise.infrastructure.persistence.repository;
+package com.henrique.pablo.BoardWise.infrastructure.persistence.repository.user;
 
 import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
