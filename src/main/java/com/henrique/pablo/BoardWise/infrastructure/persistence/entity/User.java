@@ -2,22 +2,22 @@ package com.henrique.pablo.BoardWise.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
 import jdk.jfr.Timestamp;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "users")
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
+@EqualsAndHashCode(of = "id")
 public class User {
 
     @Id
@@ -36,7 +36,12 @@ public class User {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-
     @ManyToMany(mappedBy = "users")
+    @Builder.Default
     private Set<Role> roles = new HashSet<>();
+
+    public void addRole(Role role) {
+        this.roles.add(role);
+        role.getUsers().add(this);
+    }
 }
