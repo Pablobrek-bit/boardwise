@@ -2,34 +2,48 @@ package com.henrique.pablo.BoardWise.application.service;
 
 import com.henrique.pablo.BoardWise.application.dto.UserRequest;
 import com.henrique.pablo.BoardWise.application.dto.UserResponse;
+import com.henrique.pablo.BoardWise.domain.model.RoleModel;
 import com.henrique.pablo.BoardWise.domain.model.UserModel;
+import com.henrique.pablo.BoardWise.domain.repository.IRoleRepository;
 import com.henrique.pablo.BoardWise.domain.repository.IUserRepository;
+import com.henrique.pablo.BoardWise.infrastructure.persistence.converter.UserConverter;
+import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.Role;
+import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final IUserRepository userRepository;
+    private final IRoleRepository roleRepository;
+    private final PasswordEncoder encoder;
 
     public UserResponse createUser(UserRequest request){
-        UserModel user = UserModel.builder()
-                .username(request.username())
-                .email(request.email())
-                .passwordHash(request.password())
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        userRepository.findByEmail(user.getEmail()).ifPresent(u -> {
+        userRepository.findByEmail(request.email()).ifPresent(u -> {
             throw new RuntimeException("Email already in use");
         });
 
-        user = userRepository.save(user);
+        User user = UserConverter.requestToEntity(request);
 
-        return new UserResponse(user.getId(), user.getUsername(), user.getEmail(), user.getCreatedAt());
+        Role defaultRole = roleRepository.findByName("ROLE_USER")
+                .orElseThrow(() -> new RuntimeException("Role padrão não encontrada"));
+
+        user.addRole(defaultRole);
+
+        User savedUser = userRepository.save(user);
+
+        return new UserResponse(
+                savedUser.getId(),
+                savedUser.getUsername(),
+                savedUser.getEmail(),
+                savedUser.getCreatedAt()
+        );
     }
 
     public UserResponse getUser(String id){
