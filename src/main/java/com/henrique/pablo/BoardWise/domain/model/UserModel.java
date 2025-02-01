@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.Set;
-import com.henrique.pablo.BoardWise.domain.model.RoleModel;
 
 @Data
 @NoArgsConstructor
@@ -21,11 +20,8 @@ public class UserModel {
     private LocalDateTime createdAt;
     private Set<RoleModel> roles;
 
-    public UserModel( String username, String passwordHash, String email, LocalDateTime createdAt) {
-        this.username = username;
-        this.passwordHash = passwordHash;
-        this.email = email;
-        this.createdAt = createdAt;
+    public void addRole(RoleModel role){
+        roles.add(role);
     }
 
 }
