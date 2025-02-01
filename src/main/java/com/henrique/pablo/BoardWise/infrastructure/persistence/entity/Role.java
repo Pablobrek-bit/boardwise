@@ -15,11 +15,12 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode(of = "id")
+@ToString
 public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private String id;
+    private Integer id;
 
     private String name;
 
@@ -33,6 +34,7 @@ public class Role {
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+    @Builder.Default
     private Set<User> users = new HashSet<>();
 
 }
