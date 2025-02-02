@@ -7,6 +7,9 @@ import com.henrique.pablo.BoardWise.domain.repository.IUserRepository;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.converter.UserConverter;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.Role;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.User;
+import com.henrique.pablo.BoardWise.shared.exception.EmailAlreadyExistsException;
+import com.henrique.pablo.BoardWise.shared.exception.RoleNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,16 +22,18 @@ public class UserService {
     private final IRoleRepository roleRepository;
     private final PasswordEncoder encoder;
 
+    @Transactional
     public UserResponse createUser(UserRequest request){
         userRepository.findByEmail(request.email()).ifPresent(u -> {
-            throw new RuntimeException("Email already in use");
+            throw new EmailAlreadyExistsException("Email already in use");
         });
 
         User user = UserConverter.requestToEntity(request);
 
         Role defaultRole = roleRepository.findByName("ROLE_USER")
-                .orElseThrow(() -> new RuntimeException("Role padrão não encontrada"));
+                .orElseThrow(() -> new RoleNotFoundException("Role padrão não encontrada"));
 
+        user.setPasswordHash(encoder.encode(request.password()));
         user.addRole(defaultRole);
 
         User savedUser = userRepository.save(user);
