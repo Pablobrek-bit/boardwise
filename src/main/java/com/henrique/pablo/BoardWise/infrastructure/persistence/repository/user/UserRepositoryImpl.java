@@ -15,7 +15,6 @@ public class UserRepositoryImpl implements IUserRepository {
 
     private final UserJpaRepository userJpaRepository;
 
-
     @Override
     public User save(User user) {
         return userJpaRepository.save(user);
@@ -29,8 +28,18 @@ public class UserRepositoryImpl implements IUserRepository {
 
     @Override
     public Optional<UserModel> findByEmail(String email) {
-        return Optional.ofNullable(userJpaRepository.findByEmail(email))
+        return userJpaRepository.findByEmail(email)
                 .map(UserConverter::toDomain);
+    }
+
+    @Override
+    public Optional<User> findByEmailWithRoles(String email) {
+        return userJpaRepository.findByEmailWithRoles(email);
+    }
+
+    @Override
+    public Optional<User> findByIdWithRoles(String id) {
+        return userJpaRepository.findByIdWithRoles(id);
     }
 
 }
