@@ -1,5 +1,7 @@
 package com.henrique.pablo.BoardWise.shared.exception;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.henrique.pablo.BoardWise.domain.model.ErrorModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +17,7 @@ import java.util.List;
 public class HandleException {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException e, WebRequest request){
+    public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException e, WebRequest request) {
         List<Error> errorException = e.getBindingResult().getFieldErrors().stream()
                 .map(err -> new Error(err.getDefaultMessage(), err.getField()))
                 .toList();
@@ -26,8 +28,24 @@ public class HandleException {
         return new ResponseEntity<>(error, error.getStatus());
     }
 
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity<Object> handleTokenExpiredException(TokenExpiredException e, WebRequest request) {
+        ErrorModel<String> error = new ErrorModel<>(e.getMessage(),
+                request.getDescription(false), HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(error, error.getStatus());
+    }
+
+    @ExceptionHandler(JWTVerificationException.class)
+    public ResponseEntity<Object> handleJWTVerificationException(JWTVerificationException e, WebRequest request) {
+        ErrorModel<String> error = new ErrorModel<>(e.getMessage(),
+                request.getDescription(false), HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(error, error.getStatus());
+    }
+
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Object> handleRuntimeException(RuntimeException e, WebRequest request){
+    public ResponseEntity<Object> handleRuntimeException(RuntimeException e, WebRequest request) {
         ErrorModel<String> error = new ErrorModel<>(e.getMessage(),
                 request.getDescription(false), HttpStatus.BAD_REQUEST);
 
@@ -35,7 +53,7 @@ public class HandleException {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleException(Exception e, WebRequest request){
+    public ResponseEntity<Object> handleException(Exception e, WebRequest request) {
         ErrorModel<String> error = new ErrorModel<>(e.getMessage(),
                 request.getDescription(false), HttpStatus.BAD_REQUEST);
 
