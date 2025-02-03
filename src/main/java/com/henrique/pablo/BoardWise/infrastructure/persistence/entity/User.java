@@ -40,13 +40,20 @@ public class User implements UserDetails {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER) // Adicione CascadeType.MERGE
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
     @Builder.Default
     private Set<Role> roles = new HashSet<>();
 
     public void addRole(Role role) {
         this.roles.add(role);
-        role.getUsers().add(this);
+        if (!role.getUsers().contains(this)) {
+            role.getUsers().add(this);
+        }
     }
 
     @Override

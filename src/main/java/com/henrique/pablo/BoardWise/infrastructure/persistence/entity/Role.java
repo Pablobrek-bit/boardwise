@@ -3,6 +3,7 @@ package com.henrique.pablo.BoardWise.infrastructure.persistence.entity;
 import jakarta.persistence.*;
 import jdk.jfr.Timestamp;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -16,7 +17,7 @@ import java.util.Set;
 @Builder
 @EqualsAndHashCode(of = "id")
 @ToString
-public class Role {
+public class Role implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -28,13 +29,20 @@ public class Role {
     @Timestamp
     private LocalDateTime createdAt;
 
-    @ManyToMany
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
+    @ManyToMany(mappedBy = "roles",fetch = FetchType.LAZY)
     @Builder.Default
     private Set<User> users = new HashSet<>();
+
+    @Override
+    public String getAuthority() {
+        return name;
+    }
+
+    public void addUser(User user) {
+        this.users.add(user);
+        if (!user.getRoles().contains(this)) {
+            user.getRoles().add(this);
+        }
+    }
 
 }
