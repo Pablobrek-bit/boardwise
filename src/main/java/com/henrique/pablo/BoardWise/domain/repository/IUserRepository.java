@@ -6,7 +6,7 @@ import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.User;
 import java.util.Optional;
 
 public interface IUserRepository{
-    User save(User user);
+    UserModel save(UserModel user);
     Optional<UserModel> findById(String id);
     Optional<UserModel> findByEmail(String email);
     Optional<User> findByEmailWithRoles(String email);

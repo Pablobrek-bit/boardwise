@@ -2,17 +2,18 @@ package com.henrique.pablo.BoardWise.application.service;
 
 import com.henrique.pablo.BoardWise.application.dto.UserRequest;
 import com.henrique.pablo.BoardWise.application.dto.UserResponse;
+import com.henrique.pablo.BoardWise.domain.model.RoleModel;
+import com.henrique.pablo.BoardWise.domain.model.UserModel;
 import com.henrique.pablo.BoardWise.domain.repository.IRoleRepository;
 import com.henrique.pablo.BoardWise.domain.repository.IUserRepository;
-import com.henrique.pablo.BoardWise.infrastructure.persistence.converter.UserConverter;
-import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.Role;
-import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.User;
 import com.henrique.pablo.BoardWise.shared.exception.EmailAlreadyExistsException;
 import com.henrique.pablo.BoardWise.shared.exception.RoleNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -28,15 +29,19 @@ public class UserService {
             throw new EmailAlreadyExistsException("Email already in use");
         });
 
-        User user = UserConverter.requestToEntity(request);
+        UserModel user = UserModel.builder()
+                .username(request.username())
+                .email(request.email())
+                .passwordHash(encoder.encode(request.password()))
+                .createdAt(LocalDateTime.now())
+                .build();
 
-        Role defaultRole = roleRepository.findByName("ROLE_USER")
-                .orElseThrow(() -> new RoleNotFoundException("Role padrão não encontrada"));
+        RoleModel defaultRole = roleRepository.findByName("ROLE_USER")
+                .orElseThrow(() -> new RoleNotFoundException("Role not found"));
 
-        user.setPasswordHash(encoder.encode(request.password()));
         user.addRole(defaultRole);
 
-        User savedUser = userRepository.save(user);
+        UserModel savedUser = userRepository.save(user);
 
         return new UserResponse(
                 savedUser.getId(),
