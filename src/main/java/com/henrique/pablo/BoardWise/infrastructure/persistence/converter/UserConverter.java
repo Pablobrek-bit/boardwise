@@ -30,7 +30,7 @@ public class UserConverter {
                 .passwordHash(domain.getPasswordHash())
                 .email(domain.getEmail())
                 .createdAt(domain.getCreatedAt())
-                .roles(toRoleEntitiesWithoutUsers(domain.getRoles()))
+                .roles(toRoleEntitiesWithoutUsers(domain.getRoles(), domain))
                 .build();
     }
 
@@ -44,15 +44,31 @@ public class UserConverter {
                 .collect(Collectors.toSet());
     }
 
-    private static Set<Role> toRoleEntitiesWithoutUsers(Set<RoleModel> roles) {
+    private static Set<Role> toRoleEntitiesWithoutUsers(Set<RoleModel> roles, UserModel user) {
         return roles.stream()
-                .map(role -> Role.builder()
-                        .id(role.getId())
-                        .name(role.getName())
-                        .createdAt(role.getCreatedAt())
-                        .build())
-                .collect(Collectors.toSet());
+                .map(role -> {
+                    Role roleEntity = Role.builder()
+                            .id(role.getId())
+                            .name(role.getName())
+                            .createdAt(role.getCreatedAt())
+                            .build();
+
+                    roleEntity.getUsers().add(toEntityWithoutRoles(user));
+                    return roleEntity;
+                }).collect(Collectors.toSet());
+
     }
+
+    private static User toEntityWithoutRoles(UserModel domain) {
+        return User.builder()
+                .id(domain.getId())
+                .username(domain.getUsername())
+                .passwordHash(domain.getPasswordHash())
+                .email(domain.getEmail())
+                .createdAt(domain.getCreatedAt())
+                .build();
+    }
+
 
     public static User requestToEntity(UserRequest request) {
         return User.builder()
