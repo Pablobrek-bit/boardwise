@@ -30,14 +30,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         var authorizationHeader = request.getHeader("Authorization");
 
-//        var isRouteToCreateUser = request.getRequestURI().contains("/users") && request.getMethod().equals("POST");
-//        var isRouteToAuthenticate =
-//                request.getRequestURI().contains("/auth") && request.getMethod().equals("POST");
+        var isRouteToCreateUser = request.getRequestURI().contains("/users") && request.getMethod().equals("POST");
+        var isRouteToAuthenticate =
+                request.getRequestURI().contains("/auth") && request.getMethod().equals("POST");
 
-//        if(isRouteToCreateUser || isRouteToAuthenticate){
-//            filterChain.doFilter(request, response);
-//            return;
-//        }
+        if(isRouteToCreateUser || isRouteToAuthenticate){
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         if(!validateAuthorizationHeader(authorizationHeader)) {
             throw new RuntimeException("Authorization header is invalid");
