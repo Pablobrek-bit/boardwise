@@ -2,16 +2,20 @@ package com.henrique.pablo.BoardWise.application.service;
 
 import com.henrique.pablo.BoardWise.application.dto.UserRequest;
 import com.henrique.pablo.BoardWise.application.dto.UserResponse;
+import com.henrique.pablo.BoardWise.application.dto.UserUpdateRequest;
 import com.henrique.pablo.BoardWise.domain.model.RoleModel;
 import com.henrique.pablo.BoardWise.domain.model.UserModel;
 import com.henrique.pablo.BoardWise.domain.repository.IRoleRepository;
 import com.henrique.pablo.BoardWise.domain.repository.IUserRepository;
 import com.henrique.pablo.BoardWise.shared.exception.EmailAlreadyExistsException;
+import com.henrique.pablo.BoardWise.shared.exception.IdNotFoundException;
 import com.henrique.pablo.BoardWise.shared.exception.RoleNotFoundException;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestAttribute;
 
 import java.time.LocalDateTime;
 
@@ -54,6 +58,33 @@ public class UserService {
     public UserResponse getUser(String id){
         return userRepository.findById(id)
                 .map(user -> new UserResponse(user.getId(), user.getUsername(), user.getEmail(), user.getCreatedAt()))
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new IdNotFoundException("User not found"));
+    }
+
+    @Transactional
+    public UserResponse updateUser(String id, @Valid UserUpdateRequest request) {
+        UserModel user = userRepository.findById(id)
+                .orElseThrow(() -> new IdNotFoundException("User not found"));
+
+        if (request.username() != null) {
+            user.setUsername(request.username());
+        }
+
+        if (request.password() != null) {
+            user.setPasswordHash(encoder.encode(request.password()));
+        }
+
+        if (request.email() != null) {
+            user.setEmail(request.email());
+        }
+
+        UserModel updatedUser = userRepository.save(user);
+
+        return new UserResponse(
+                updatedUser.getId(),
+                updatedUser.getUsername(),
+                updatedUser.getEmail(),
+                updatedUser.getCreatedAt()
+        );
     }
 }

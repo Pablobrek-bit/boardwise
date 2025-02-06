@@ -2,6 +2,7 @@ package com.henrique.pablo.BoardWise.infrastructure.controller;
 
 import com.henrique.pablo.BoardWise.application.dto.UserRequest;
 import com.henrique.pablo.BoardWise.application.dto.UserResponse;
+import com.henrique.pablo.BoardWise.application.dto.UserUpdateRequest;
 import com.henrique.pablo.BoardWise.application.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,5 +34,10 @@ public class UserController {
     @GetMapping("/{id}")
     public UserResponse getUser(@PathVariable String id) {
         return userService.getUser(id);
+    }
+
+    @PutMapping()
+    public UserResponse updateUser(@RequestAttribute(name = "id") String id, @Valid @RequestBody UserUpdateRequest request) {
+        return userService.updateUser(id, request);
     }
 }
