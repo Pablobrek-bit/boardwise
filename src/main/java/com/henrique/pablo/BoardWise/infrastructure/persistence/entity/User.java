@@ -49,6 +49,10 @@ public class User implements UserDetails {
     @Builder.Default
     private Set<Role> roles = new HashSet<>();
 
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    @Builder.Default
+    private Set<Project> projects = new HashSet<>();
+
     public void addRole(Role role) {
         this.roles.add(role);
         if (!role.getUsers().contains(this)) {

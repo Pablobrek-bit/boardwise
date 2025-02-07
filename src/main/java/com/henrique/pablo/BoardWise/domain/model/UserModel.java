@@ -20,6 +20,7 @@ public class UserModel {
     private String email;
     private LocalDateTime createdAt;
     private Set<RoleModel> roles;
+    private Set<ProjectModel> projects;
 
     public void addRole(RoleModel role){
         if(roles == null){
