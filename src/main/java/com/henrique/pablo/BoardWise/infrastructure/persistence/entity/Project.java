@@ -27,4 +27,11 @@ public class Project {
     @JoinColumn(name = "owner_id")
     private User owner;
 
+    public void setOwner(User owner) {
+        this.owner = owner;
+        if(owner != null) {
+            owner.getProjects().add(this);
+        }
+    }
+
 }
