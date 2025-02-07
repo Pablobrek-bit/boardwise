@@ -1,8 +1,8 @@
 package com.henrique.pablo.BoardWise.infrastructure.controller;
 
-import com.henrique.pablo.BoardWise.application.dto.UserRequest;
-import com.henrique.pablo.BoardWise.application.dto.UserResponse;
-import com.henrique.pablo.BoardWise.application.dto.UserUpdateRequest;
+import com.henrique.pablo.BoardWise.application.dto.user.UserRequest;
+import com.henrique.pablo.BoardWise.application.dto.user.UserResponse;
+import com.henrique.pablo.BoardWise.application.dto.user.UserUpdateRequest;
 import com.henrique.pablo.BoardWise.application.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

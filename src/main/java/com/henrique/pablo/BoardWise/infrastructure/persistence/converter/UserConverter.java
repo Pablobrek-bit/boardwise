@@ -1,6 +1,7 @@
 package com.henrique.pablo.BoardWise.infrastructure.persistence.converter;
 
-import com.henrique.pablo.BoardWise.application.dto.UserRequest;
+import com.henrique.pablo.BoardWise.application.dto.user.UserRequest;
+import com.henrique.pablo.BoardWise.application.dto.user.UserResponse;
 import com.henrique.pablo.BoardWise.domain.model.RoleModel;
 import com.henrique.pablo.BoardWise.domain.model.UserModel;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.Role;
@@ -78,5 +79,14 @@ public class UserConverter {
                 .createdAt(LocalDateTime.now())
                 .build();
 
+    }
+
+    public static User responseToEntity(UserResponse user) {
+        return User.builder()
+                .id(user.id())
+                .username(user.username())
+                .email(user.email())
+                .createdAt(user.createdAt())
+                .build();
     }
 }
