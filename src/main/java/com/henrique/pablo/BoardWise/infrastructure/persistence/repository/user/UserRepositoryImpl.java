@@ -24,16 +24,6 @@ public class UserRepositoryImpl implements IUserRepository {
     @Override
     @Transactional
     public UserModel save(UserModel user) {
-//        User userEntity = UserConverter.toEntity(user);
-//
-
-//
-//        var userCreated = userJpaRepository.save(userEntity);
-//
-//        userCreated.addRole(defaultRole);
-//
-//        return UserConverter.toDomain(userJpaRepository.save(userCreated));
-
         User userEntity = UserConverter.toEntity(user);
 
         Role defaultRole = RoleConverter.toEntity(roleRepository.findByName("ROLE_USER")
