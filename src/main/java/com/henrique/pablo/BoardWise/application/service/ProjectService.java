@@ -8,6 +8,10 @@ import com.henrique.pablo.BoardWise.infrastructure.persistence.converter.UserCon
 import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,6 +38,21 @@ public class ProjectService {
                 savedProject.getDescription(),
                 ownerId
         );
+    }
+
+    public Page<ProjectResponse> listProjects(int page, int size, String sort, String direction, String ownerId){
+        Pageable pageable = PageRequest.of(page, size,
+                Sort.by(direction.equalsIgnoreCase("asc") ? Sort.Direction.ASC :
+                        Sort.Direction.DESC, sort));
+
+        Page<ProjectModel> projects = projectRepository.findAll(pageable);
+
+        return projects.map(project -> new ProjectResponse(
+                project.getId(),
+                project.getName(),
+                project.getDescription(),
+                project.getOwner().getId()
+        ));
     }
 
     // List all projects (with pagination).

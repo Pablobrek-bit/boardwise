@@ -5,6 +5,7 @@ import com.henrique.pablo.BoardWise.application.dto.ProjectResponse;
 import com.henrique.pablo.BoardWise.application.service.ProjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,9 +24,18 @@ public class ProjectController {
         return projectService.createProject(ownerId, projectRequest);
     }
 
-
-
     // List all projects (with pagination).
+
+    @GetMapping
+    public Page<ProjectResponse> findAll(@RequestParam(defaultValue = "0") int page,
+                                         @RequestParam(defaultValue = "10") int size,
+                                         @RequestParam(defaultValue = "id") String sort,
+                                         @RequestParam(defaultValue = "asc") String direction,
+                                         @RequestAttribute("id") String ownerId
+                                         ){
+        return projectService.listProjects(page, size, sort, direction, ownerId);
+    }
+
     // Get a project by id.
     // Update a project.
     // Delete a project (soft delete).
