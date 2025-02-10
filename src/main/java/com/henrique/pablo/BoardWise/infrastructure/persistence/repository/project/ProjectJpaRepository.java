@@ -8,6 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProjectJpaRepository extends JpaRepository<Project, String> {
-
     Page<Project> findByOwnerIdContainingOrNameOrDescription(String ownerId, String name, String description, Pageable pageable);
 }
