@@ -44,6 +44,38 @@ public class HandleException {
         return new ResponseEntity<>(error, error.getStatus());
     }
 
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<Object> handleEmailEmailAlreadyExistsException(EmailAlreadyExistsException e, WebRequest request) {
+        ErrorModel<String> error = new ErrorModel<>(e.getMessage(),
+                request.getDescription(false), e.status);
+
+        return new ResponseEntity<>(error, error.getStatus());
+    }
+
+    @ExceptionHandler(IdNotFoundException.class)
+    public ResponseEntity<Object> handleIdNotFoundException(IdNotFoundException e, WebRequest request) {
+        ErrorModel<String> error = new ErrorModel<>(e.getMessage(),
+                request.getDescription(false), e.status);
+
+        return new ResponseEntity<>(error, error.getStatus());
+    }
+
+    @ExceptionHandler(RoleNotFoundException.class)
+    public ResponseEntity<Object> handleRoleNotFoundException(RoleNotFoundException e, WebRequest request) {
+        ErrorModel<String> error = new ErrorModel<>(e.getMessage(),
+                request.getDescription(false), e.status);
+
+        return new ResponseEntity<>(error, error.getStatus());
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException e, WebRequest request) {
+        ErrorModel<String> error = new ErrorModel<>(e.getMessage(),
+                request.getDescription(false), e.status);
+
+        return new ResponseEntity<>(error, error.getStatus());
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Object> handleRuntimeException(RuntimeException e, WebRequest request) {
         ErrorModel<String> error = new ErrorModel<>(e.getMessage(),

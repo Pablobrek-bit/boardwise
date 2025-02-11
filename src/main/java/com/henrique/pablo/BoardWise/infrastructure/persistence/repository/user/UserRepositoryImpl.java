@@ -40,6 +40,11 @@ public class UserRepositoryImpl implements IUserRepository {
                 .map(UserConverter::toDomain);
     }
 
+    public Optional<UserModel> findByIdWithProjects(String id) {
+        return userJpaRepository.findById(id)
+                .map(UserConverter::toDomain);
+    }
+
     @Override
     public Optional<UserModel> findByEmail(String email) {
         return userJpaRepository.findByEmail(email)

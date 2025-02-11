@@ -2,7 +2,6 @@ package com.henrique.pablo.BoardWise.infrastructure.persistence.converter;
 
 import com.henrique.pablo.BoardWise.domain.model.ProjectModel;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.Project;
-import jakarta.validation.Valid;
 
 public class ProjectConverter {
 
@@ -28,11 +27,10 @@ public class ProjectConverter {
                 .build();
     }
 
-    public static Project toEntityWithoutOwner(@Valid ProjectModel model){
+    public static Project toEntityWithoutOwner( ProjectModel model){
         if(model == null) return null;
 
         return Project.builder()
-//                .id(model.getId())
                 .name(model.getName())
                 .description(model.getDescription())
                 .build();
