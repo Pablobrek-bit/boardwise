@@ -26,8 +26,8 @@ public class ProjectRepositoryImpl implements IProjectRepository {
     }
 
     @Override
-    public Page<ProjectModel> findAll(Pageable pageable) {
-        return projectJpaRepository.findAll(pageable)
+    public Page<ProjectModel> findAll( String ownerId,Pageable pageable, String search) {
+        return projectJpaRepository.findByOwnerIdAndSearchTerm(ownerId, search, pageable)
                 .map(ProjectConverter::toDomain);
     }
 }

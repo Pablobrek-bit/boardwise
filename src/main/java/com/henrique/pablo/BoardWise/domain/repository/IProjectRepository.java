@@ -7,5 +7,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface IProjectRepository {
     ProjectModel save(User user, ProjectModel projectModel);
-    Page<ProjectModel> findAll(Pageable pageable);
+    Page<ProjectModel> findAll(String ownerId,Pageable pageable, String search);
 }

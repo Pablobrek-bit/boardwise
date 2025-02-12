@@ -40,12 +40,12 @@ public class ProjectService {
         );
     }
 
-    public Page<ProjectResponse> listProjects(int page, int size, String sort, String direction, String ownerId){
+    public Page<ProjectResponse> listProjects(int page, int size, String sort, String direction, String ownerId, String search){
         Pageable pageable = PageRequest.of(page, size,
                 Sort.by(direction.equalsIgnoreCase("asc") ? Sort.Direction.ASC :
                         Sort.Direction.DESC, sort));
 
-        Page<ProjectModel> projects = projectRepository.findAll(pageable);
+        Page<ProjectModel> projects = projectRepository.findAll(ownerId,pageable, search);
 
         return projects.map(project -> new ProjectResponse(
                 project.getId(),

@@ -31,9 +31,10 @@ public class ProjectController {
                                          @RequestParam(defaultValue = "10") int size,
                                          @RequestParam(defaultValue = "id") String sort,
                                          @RequestParam(defaultValue = "asc") String direction,
+                                         @RequestParam(defaultValue = "") String search,
                                          @RequestAttribute("id") String ownerId
                                          ){
-        return projectService.listProjects(page, size, sort, direction, ownerId);
+        return projectService.listProjects(page, size, sort, direction, ownerId, search);
     }
 
     // Get a project by id.
