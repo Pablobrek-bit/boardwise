@@ -5,6 +5,7 @@ import com.henrique.pablo.BoardWise.domain.repository.IProjectRepository;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.converter.ProjectConverter;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.Project;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.User;
+import com.henrique.pablo.BoardWise.shared.exception.ProjectNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,5 +30,12 @@ public class ProjectRepositoryImpl implements IProjectRepository {
     public Page<ProjectModel> findAll( String ownerId,Pageable pageable, String search) {
         return projectJpaRepository.findByOwnerIdAndSearchTerm(ownerId, search, pageable)
                 .map(ProjectConverter::toDomain);
+    }
+
+    @Override
+    public ProjectModel findById(String id) {
+        return projectJpaRepository.findById(id)
+                .map(ProjectConverter::toDomain)
+                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
     }
 }

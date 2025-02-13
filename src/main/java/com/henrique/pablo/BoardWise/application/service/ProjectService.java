@@ -6,6 +6,7 @@ import com.henrique.pablo.BoardWise.domain.model.ProjectModel;
 import com.henrique.pablo.BoardWise.domain.repository.IProjectRepository;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.converter.UserConverter;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.User;
+import com.henrique.pablo.BoardWise.shared.exception.ProjectNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -53,6 +54,22 @@ public class ProjectService {
                 project.getDescription(),
                 project.getOwner().getId()
         ));
+    }
+
+    public ProjectResponse findProjectById(String id, String ownerId) {
+        ProjectModel project = projectRepository.findById(id);
+
+        if (!project.getOwner().getId().equals(ownerId)) {
+            throw new ProjectNotFoundException("Project not found");
+        }
+
+        return new ProjectResponse(
+                project.getId(),
+                project.getName(),
+                project.getDescription(),
+                project.getOwner().getId()
+        );
+
     }
 
     // List all projects (with pagination).

@@ -17,7 +17,6 @@ public class ProjectController {
 
     // BASIC
     // Create a new project.
-
     @PostMapping
     public ProjectResponse createProject(@RequestAttribute("id") String ownerId,
                                          @Valid @RequestBody ProjectRequest projectRequest){
@@ -25,7 +24,6 @@ public class ProjectController {
     }
 
     // List all projects (with pagination).
-
     @GetMapping
     public Page<ProjectResponse> findAll(@RequestParam(defaultValue = "0") int page,
                                          @RequestParam(defaultValue = "10") int size,
@@ -38,6 +36,11 @@ public class ProjectController {
     }
 
     // Get a project by id.
+    @GetMapping("/{id}")
+    public ProjectResponse findById(@PathVariable String id, @RequestAttribute("id") String ownerId){
+        return projectService.findProjectById(id, ownerId);
+    }
+
     // Update a project.
     // Delete a project (soft delete).
 
