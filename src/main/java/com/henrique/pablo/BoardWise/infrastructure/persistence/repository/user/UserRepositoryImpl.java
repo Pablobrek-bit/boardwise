@@ -20,7 +20,6 @@ public class UserRepositoryImpl implements IUserRepository {
     private final UserJpaRepository userJpaRepository;
     private final IRoleRepository roleRepository;
 
-
     @Override
     @Transactional
     public UserModel save(UserModel user) {
@@ -36,11 +35,6 @@ public class UserRepositoryImpl implements IUserRepository {
 
     @Override
     public Optional<UserModel> findById(String id) {
-        return userJpaRepository.findById(id)
-                .map(UserConverter::toDomain);
-    }
-
-    public Optional<UserModel> findByIdWithProjects(String id) {
         return userJpaRepository.findById(id)
                 .map(UserConverter::toDomain);
     }

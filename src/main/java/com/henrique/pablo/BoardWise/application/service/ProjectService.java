@@ -4,8 +4,6 @@ import com.henrique.pablo.BoardWise.application.dto.ProjectRequest;
 import com.henrique.pablo.BoardWise.application.dto.ProjectResponse;
 import com.henrique.pablo.BoardWise.domain.model.ProjectModel;
 import com.henrique.pablo.BoardWise.domain.repository.IProjectRepository;
-import com.henrique.pablo.BoardWise.infrastructure.persistence.converter.UserConverter;
-import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.User;
 import com.henrique.pablo.BoardWise.shared.exception.ProjectNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +18,6 @@ import org.springframework.stereotype.Service;
 public class ProjectService {
 
     private final IProjectRepository projectRepository;
-    private final UserService userService;
 
     // BASIC
     // Create a new project.
@@ -30,8 +27,7 @@ public class ProjectService {
                 .description(projectRequest.description())
                 .build();
 
-        User owner = UserConverter.responseToEntity(userService.getUser(ownerId));
-        ProjectModel savedProject = projectRepository.save(owner, projectModel);
+        ProjectModel savedProject = projectRepository.save(ownerId, projectModel);
 
         return new ProjectResponse(
                 savedProject.getId(),
@@ -57,7 +53,8 @@ public class ProjectService {
     }
 
     public ProjectResponse findProjectById(String id, String ownerId) {
-        ProjectModel project = projectRepository.findById(id);
+        ProjectModel project = projectRepository.findById(id)
+                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
 
         if (!project.getOwner().getId().equals(ownerId)) {
             throw new ProjectNotFoundException("Project not found");
@@ -69,7 +66,32 @@ public class ProjectService {
                 project.getDescription(),
                 project.getOwner().getId()
         );
+    }
 
+    public ProjectResponse updateProject(String id, String ownerId, ProjectRequest projectRequest) {
+        ProjectModel project = projectRepository.findById(id)
+                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
+
+        if (!project.getOwner().getId().equals(ownerId)) {
+            throw new ProjectNotFoundException("Project not found");
+        }
+
+        if(projectRequest.name() != null){
+            project.setName(projectRequest.name());
+        }
+
+        if(projectRequest.description() != null){
+            project.setDescription(projectRequest.description());
+        }
+
+        ProjectModel updatedProject = projectRepository.save(ownerId, project);
+
+        return new ProjectResponse(
+                updatedProject.getId(),
+                updatedProject.getName(),
+                updatedProject.getDescription(),
+                updatedProject.getOwner().getId()
+        );
     }
 
     // List all projects (with pagination).

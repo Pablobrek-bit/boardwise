@@ -31,6 +31,7 @@ public class ProjectConverter {
         if(model == null) return null;
 
         return Project.builder()
+                .id(model.getId())
                 .name(model.getName())
                 .description(model.getDescription())
                 .build();

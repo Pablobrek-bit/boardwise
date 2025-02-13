@@ -41,7 +41,15 @@ public class ProjectController {
         return projectService.findProjectById(id, ownerId);
     }
 
-    // Update a project.
+    // Update a project
+    @PutMapping("/{id}")
+    public ProjectResponse updateProject(@PathVariable String id,
+                                         @RequestAttribute("id") String ownerId,
+                                         @Valid @RequestBody ProjectRequest projectRequest){
+        return projectService.updateProject(id, ownerId, projectRequest);
+    }
+
+    // implement the soft delete of a project
     // Delete a project (soft delete).
 
     // PROJECT MEMBERS

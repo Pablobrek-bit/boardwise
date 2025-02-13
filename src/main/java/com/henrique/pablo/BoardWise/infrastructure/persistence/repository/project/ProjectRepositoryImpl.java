@@ -5,11 +5,12 @@ import com.henrique.pablo.BoardWise.domain.repository.IProjectRepository;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.converter.ProjectConverter;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.Project;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.User;
-import com.henrique.pablo.BoardWise.shared.exception.ProjectNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -18,9 +19,9 @@ public class ProjectRepositoryImpl implements IProjectRepository {
     private final ProjectJpaRepository projectJpaRepository;
 
     @Override
-    public ProjectModel save(User user, ProjectModel projectModel) {
+    public ProjectModel save(String ownerId, ProjectModel projectModel) {
         Project project = ProjectConverter.toEntityWithoutOwner(projectModel);
-        project.setOwner(user);
+        project.setOwner(User.builder().id(ownerId).build());
         project = projectJpaRepository.save(project);
 
         return ProjectConverter.toDomain(project);
@@ -33,9 +34,9 @@ public class ProjectRepositoryImpl implements IProjectRepository {
     }
 
     @Override
-    public ProjectModel findById(String id) {
+    public Optional<ProjectModel> findById(String id) {
         return projectJpaRepository.findById(id)
-                .map(ProjectConverter::toDomain)
-                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
+                .map(ProjectConverter::toDomain);
+
     }
 }
