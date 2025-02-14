@@ -2,6 +2,9 @@ package com.henrique.pablo.BoardWise.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.annotations.SoftDelete;
+import org.hibernate.annotations.Where;
 
 
 @Getter
@@ -13,6 +16,8 @@ import lombok.*;
 @Builder
 @ToString
 @EqualsAndHashCode(of = "id")
+//@Where(clause = "deleted = false")
+@SQLRestriction("deleted = false")
 public class Project {
 
     @Id
@@ -22,6 +27,9 @@ public class Project {
     @Column(nullable = false)
     private String name;
     private String description;
+
+    @SoftDelete
+    private boolean deleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")

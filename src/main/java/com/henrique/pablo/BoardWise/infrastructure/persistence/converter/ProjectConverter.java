@@ -12,6 +12,7 @@ public class ProjectConverter {
                 .id(entity.getId())
                 .name(entity.getName())
                 .description(entity.getDescription())
+                .deleted(entity.isDeleted())
                 .owner(UserConverter.toDomain(entity.getOwner()))
                 .build();
     }
@@ -23,6 +24,7 @@ public class ProjectConverter {
                 .id(model.getId())
                 .name(model.getName())
                 .description(model.getDescription())
+                .deleted(model.getDeleted())
                 .owner(UserConverter.toEntity(model.getOwner()))
                 .build();
     }
@@ -34,6 +36,7 @@ public class ProjectConverter {
                 .id(model.getId())
                 .name(model.getName())
                 .description(model.getDescription())
+                .deleted(model.getDeleted())
                 .build();
     }
 }

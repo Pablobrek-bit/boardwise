@@ -13,5 +13,6 @@ public class ProjectModel {
     private String id;
     private String name;
     private String description;
+    private Boolean deleted;
     private UserModel owner;
 }
