@@ -51,6 +51,11 @@ public class ProjectController {
 
     // implement the soft delete of a project
     // Delete a project (soft delete).
+    @DeleteMapping("/{id}")
+    public ProjectResponse deleteProject(@PathVariable String id,
+                                         @RequestAttribute("id") String ownerId){
+        return projectService.deleteProject(id, ownerId);
+    }
 
     // PROJECT MEMBERS
     // Add a member to the project.

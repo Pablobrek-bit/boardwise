@@ -94,6 +94,25 @@ public class ProjectService {
         );
     }
 
+    public ProjectResponse deleteProject(String id, String ownerId) {
+        ProjectModel project = projectRepository.findById(id)
+                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
+
+        if (!project.getOwner().getId().equals(ownerId)) {
+            throw new ProjectNotFoundException("Project not found");
+        }
+
+        project.setDeleted(true);
+        ProjectModel updatedProject = projectRepository.save(ownerId, project);
+
+        return new ProjectResponse(
+                updatedProject.getId(),
+                updatedProject.getName(),
+                updatedProject.getDescription(),
+                updatedProject.getOwner().getId()
+        );
+    }
+
     // List all projects (with pagination).
     // Get a project by id.
     // Update a project.

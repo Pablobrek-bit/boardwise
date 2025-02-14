@@ -37,6 +37,5 @@ public class ProjectRepositoryImpl implements IProjectRepository {
     public Optional<ProjectModel> findById(String id) {
         return projectJpaRepository.findById(id)
                 .map(ProjectConverter::toDomain);
-
     }
 }
