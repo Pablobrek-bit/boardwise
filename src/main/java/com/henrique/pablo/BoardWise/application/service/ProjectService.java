@@ -19,8 +19,6 @@ public class ProjectService {
 
     private final IProjectRepository projectRepository;
 
-    // BASIC
-    // Create a new project.
     public ProjectResponse createProject(String ownerId, @Valid ProjectRequest projectRequest) {
         ProjectModel projectModel = ProjectModel.builder()
                 .name(projectRequest.name())
@@ -84,7 +82,7 @@ public class ProjectService {
             project.setDescription(projectRequest.description());
         }
 
-        ProjectModel updatedProject = projectRepository.save(ownerId, project);
+        ProjectModel updatedProject = projectRepository.update(project);
 
         return new ProjectResponse(
                 updatedProject.getId(),
@@ -103,7 +101,7 @@ public class ProjectService {
         }
 
         project.setDeleted(true);
-        ProjectModel updatedProject = projectRepository.save(ownerId, project);
+        ProjectModel updatedProject = projectRepository.update(project);
 
         return new ProjectResponse(
                 updatedProject.getId(),
@@ -113,13 +111,28 @@ public class ProjectService {
         );
     }
 
-    // List all projects (with pagination).
-    // Get a project by id.
-    // Update a project.
-    // Delete a project (soft delete).
+    public ProjectResponse addMember(String id, String ownerId, String memberId) {
+        ProjectModel project = projectRepository.findByIdWithParticipants(id)
+                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
 
-    // PROJECT MEMBERS
-    // Add a member to the project.
-    // Remove a member from the project.
-    // List all members of the project (with pagination).
+        if (!project.getOwner().getId().equals(ownerId)) {
+            throw new ProjectNotFoundException("Project not found");
+        }
+
+        if (project.getParticipants().stream().anyMatch(user -> user.getId().equals(memberId))) {
+            throw new ProjectNotFoundException("Project not found");
+        }
+
+
+        ProjectModel updatedProject = projectRepository.addParticipant(id, memberId);
+
+
+        return new ProjectResponse(
+                updatedProject.getId(),
+                updatedProject.getName(),
+                updatedProject.getDescription(),
+                updatedProject.getOwner().getId()
+        );
+    }
+
 }

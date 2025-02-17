@@ -53,11 +53,27 @@ public class User implements UserDetails {
     @Builder.Default
     private Set<Project> projects = new HashSet<>();
 
+    @ManyToMany(mappedBy = "participants", fetch = FetchType.LAZY)
+    @Builder.Default
+    private Set<Project> participatingProjects = new HashSet<>();
+
     public void addRole(Role role) {
         this.roles.add(role);
         if (!role.getUsers().contains(this)) {
             role.getUsers().add(this);
         }
+    }
+
+    public void addProject(Project project) {
+        this.participatingProjects.add(project);
+        if (!project.getParticipants().contains(this)) {
+            project.getParticipants().add(this);
+        }
+    }
+
+    public void removeProject(Project project) {
+        this.participatingProjects.remove(project);
+        project.getParticipants().remove(this);
     }
 
     @Override

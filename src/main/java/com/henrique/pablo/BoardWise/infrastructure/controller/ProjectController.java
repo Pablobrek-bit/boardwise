@@ -49,7 +49,6 @@ public class ProjectController {
         return projectService.updateProject(id, ownerId, projectRequest);
     }
 
-    // implement the soft delete of a project
     // Delete a project (soft delete).
     @DeleteMapping("/{id}")
     public ProjectResponse deleteProject(@PathVariable String id,
@@ -58,7 +57,14 @@ public class ProjectController {
     }
 
     // PROJECT MEMBERS
-    // Add a member to the project.
+    // Add a member to the project. (verificar se o usuário é dono do projeto, se o usuário já é membro do projeto, se o usuário já é membro de outro projeto com o mesmo board)
+    @PostMapping("/{id}/members")
+    public ProjectResponse addMember(@PathVariable String id,
+                                     @RequestAttribute("id") String ownerId,
+                                     @RequestParam String memberId){
+        return projectService.addMember(id, ownerId, memberId);
+    }
+
     // Remove a member from the project.
     // List all members of the project (with pagination).
 

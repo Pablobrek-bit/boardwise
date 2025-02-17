@@ -19,8 +19,9 @@ public class UserModel {
     private String passwordHash;
     private String email;
     private LocalDateTime createdAt;
-    private Set<RoleModel> roles;
-    private Set<ProjectModel> projects;
+    private Set<RoleModel> roles = new HashSet<>();
+    private Set<ProjectModel> projects = new HashSet<>();
+    private Set<ProjectModel> participatingProjects = new HashSet<>();
 
     public void addRole(RoleModel role){
         if(roles == null){

@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.SoftDelete;
-import org.hibernate.annotations.Where;
+
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Getter
@@ -16,7 +18,6 @@ import org.hibernate.annotations.Where;
 @Builder
 @ToString
 @EqualsAndHashCode(of = "id")
-//@Where(clause = "deleted = false")
 @SQLRestriction("deleted = false")
 public class Project {
 
@@ -35,11 +36,23 @@ public class Project {
     @JoinColumn(name = "owner_id")
     private User owner;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "project_participants",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> participants = new HashSet<>();
+
+    public void addParticipant(User user){
+        this.participants.add(user);
+        user.getParticipatingProjects().add(this);
+    }
+
     public void setOwner(User owner) {
         this.owner = owner;
         if(owner != null) {
             owner.getProjects().add(this);
         }
     }
-
 }

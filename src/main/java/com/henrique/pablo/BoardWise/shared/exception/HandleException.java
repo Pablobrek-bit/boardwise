@@ -25,6 +25,8 @@ public class HandleException {
         ErrorModel<List<Error>> error = new ErrorModel<>(errorException,
                 request.getDescription(false), HttpStatus.BAD_REQUEST);
 
+        System.out.println(e.getMessage());
+
         return new ResponseEntity<>(error, error.getStatus());
     }
 
@@ -32,6 +34,8 @@ public class HandleException {
     public ResponseEntity<Object> handleTokenExpiredException(TokenExpiredException e, WebRequest request) {
         ErrorModel<String> error = new ErrorModel<>(e.getMessage(),
                 request.getDescription(false), HttpStatus.BAD_REQUEST);
+
+        System.out.println(e.getMessage());
 
         return new ResponseEntity<>(error, error.getStatus());
     }
@@ -41,6 +45,8 @@ public class HandleException {
         ErrorModel<String> error = new ErrorModel<>(e.getMessage(),
                 request.getDescription(false), HttpStatus.BAD_REQUEST);
 
+        System.out.println(e.getMessage());
+
         return new ResponseEntity<>(error, error.getStatus());
     }
 
@@ -48,6 +54,8 @@ public class HandleException {
     public ResponseEntity<Object> handleEmailEmailAlreadyExistsException(EmailAlreadyExistsException e, WebRequest request) {
         ErrorModel<String> error = new ErrorModel<>(e.getMessage(),
                 request.getDescription(false), e.status);
+
+        System.out.println(e.getMessage());
 
         return new ResponseEntity<>(error, error.getStatus());
     }
@@ -57,6 +65,8 @@ public class HandleException {
         ErrorModel<String> error = new ErrorModel<>(e.getMessage(),
                 request.getDescription(false), e.status);
 
+        System.out.println(e.getMessage());
+
         return new ResponseEntity<>(error, error.getStatus());
     }
 
@@ -64,6 +74,8 @@ public class HandleException {
     public ResponseEntity<Object> handleRoleNotFoundException(RoleNotFoundException e, WebRequest request) {
         ErrorModel<String> error = new ErrorModel<>(e.getMessage(),
                 request.getDescription(false), e.status);
+
+        System.out.println(e.getMessage());
 
         return new ResponseEntity<>(error, error.getStatus());
     }
@@ -73,6 +85,8 @@ public class HandleException {
         ErrorModel<String> error = new ErrorModel<>(e.getMessage(),
                 request.getDescription(false), e.status);
 
+        System.out.println(e.getMessage());
+
         return new ResponseEntity<>(error, error.getStatus());
     }
 
@@ -81,6 +95,8 @@ public class HandleException {
         ErrorModel<String> error = new ErrorModel<>(e.getMessage(),
                 request.getDescription(false), HttpStatus.BAD_REQUEST);
 
+        System.out.println(e.getMessage());
+
         return new ResponseEntity<>(error, error.getStatus());
     }
 
@@ -88,6 +104,8 @@ public class HandleException {
     public ResponseEntity<Object> handleException(Exception e, WebRequest request) {
         ErrorModel<String> error = new ErrorModel<>(e.getMessage(),
                 request.getDescription(false), HttpStatus.BAD_REQUEST);
+
+        System.out.println(e.getMessage());
 
         return new ResponseEntity<>(error, error.getStatus());
     }

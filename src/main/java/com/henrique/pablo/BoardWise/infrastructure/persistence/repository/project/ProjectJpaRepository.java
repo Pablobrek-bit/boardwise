@@ -7,8 +7,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface ProjectJpaRepository extends JpaRepository<Project, String> {
     @Query("SELECT p FROM Project p WHERE p.owner.id = :ownerId AND (LOWER(p.name) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR LOWER(p.description) LIKE LOWER(CONCAT('%', :searchTerm, '%')))")
     Page<Project> findByOwnerIdAndSearchTerm(String ownerId, String searchTerm, Pageable pageable);
+
+    @Query("SELECT p FROM Project p JOIN FETCH p.owner WHERE p.id = :id")
+    Optional<Project> findByIdWithParticipants(String id);
 }
