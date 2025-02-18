@@ -1,7 +1,7 @@
 package com.henrique.pablo.BoardWise.infrastructure.controller;
 
-import com.henrique.pablo.BoardWise.application.dto.ProjectRequest;
-import com.henrique.pablo.BoardWise.application.dto.ProjectResponse;
+import com.henrique.pablo.BoardWise.application.dto.project.ProjectRequest;
+import com.henrique.pablo.BoardWise.application.dto.project.ProjectResponse;
 import com.henrique.pablo.BoardWise.application.service.ProjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

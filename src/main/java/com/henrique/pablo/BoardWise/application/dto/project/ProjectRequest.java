@@ -1,4 +1,4 @@
-package com.henrique.pablo.BoardWise.application.dto;
+package com.henrique.pablo.BoardWise.application.dto.project;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

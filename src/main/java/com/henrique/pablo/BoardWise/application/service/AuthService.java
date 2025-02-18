@@ -1,7 +1,7 @@
 package com.henrique.pablo.BoardWise.application.service;
 
-import com.henrique.pablo.BoardWise.application.dto.JwtResponse;
-import com.henrique.pablo.BoardWise.application.dto.LoginRequest;
+import com.henrique.pablo.BoardWise.application.dto.auth.JwtResponse;
+import com.henrique.pablo.BoardWise.application.dto.auth.LoginRequest;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.User;
 import com.henrique.pablo.BoardWise.shared.utils.TokenUtil;
 import lombok.RequiredArgsConstructor;

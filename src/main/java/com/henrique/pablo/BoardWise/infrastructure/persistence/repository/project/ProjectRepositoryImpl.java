@@ -32,6 +32,7 @@ public class ProjectRepositoryImpl implements IProjectRepository {
         return ProjectConverter.toDomain(project);
     }
 
+    @Transactional
     public ProjectModel update(ProjectModel projectModel){
         Project project = ProjectConverter.toEntity(projectModel);
 

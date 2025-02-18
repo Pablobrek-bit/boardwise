@@ -1,7 +1,7 @@
 package com.henrique.pablo.BoardWise.application.service;
 
-import com.henrique.pablo.BoardWise.application.dto.ProjectRequest;
-import com.henrique.pablo.BoardWise.application.dto.ProjectResponse;
+import com.henrique.pablo.BoardWise.application.dto.project.ProjectRequest;
+import com.henrique.pablo.BoardWise.application.dto.project.ProjectResponse;
 import com.henrique.pablo.BoardWise.domain.model.ProjectModel;
 import com.henrique.pablo.BoardWise.domain.repository.IProjectRepository;
 import com.henrique.pablo.BoardWise.shared.exception.ProjectNotFoundException;
