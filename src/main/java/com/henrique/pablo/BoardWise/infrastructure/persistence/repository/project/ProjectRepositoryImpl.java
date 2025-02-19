@@ -72,4 +72,17 @@ public class ProjectRepositoryImpl implements IProjectRepository {
         project = projectJpaRepository.save(project);
         return ProjectConverter.toDomain(project);
     }
+
+    @Override
+    public ProjectModel removeParticipant(String projectId, String participantId) {
+        Project project = projectJpaRepository.findByIdWithParticipants(projectId)
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+
+        User user = userJpaRepository.getReferenceById(participantId);
+
+        project.removeParticipant(user);
+
+        project = projectJpaRepository.save(project);
+        return ProjectConverter.toDomain(project);
+    }
 }

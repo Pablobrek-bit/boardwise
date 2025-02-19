@@ -13,5 +13,5 @@ public interface IProjectRepository {
     Optional<ProjectModel> findByIdWithParticipants(String id);
     ProjectModel update(ProjectModel projectModel);
     ProjectModel addParticipant(String projectId, String participantId);
-
+    ProjectModel removeParticipant(String projectId, String participantId);
 }

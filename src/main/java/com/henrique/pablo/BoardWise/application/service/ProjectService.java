@@ -2,6 +2,9 @@ package com.henrique.pablo.BoardWise.application.service;
 
 import com.henrique.pablo.BoardWise.application.dto.project.ProjectRequest;
 import com.henrique.pablo.BoardWise.application.dto.project.ProjectResponse;
+import com.henrique.pablo.BoardWise.application.dto.project.ProjectResponseWithParticipants;
+import com.henrique.pablo.BoardWise.application.dto.user.UserResponse;
+import com.henrique.pablo.BoardWise.application.dto.user.UserSimpleReturn;
 import com.henrique.pablo.BoardWise.domain.model.ProjectModel;
 import com.henrique.pablo.BoardWise.domain.repository.IProjectRepository;
 import com.henrique.pablo.BoardWise.shared.exception.ProjectNotFoundException;
@@ -12,6 +15,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -111,7 +116,7 @@ public class ProjectService {
         );
     }
 
-    public ProjectResponse addMember(String id, String ownerId, String memberId) {
+    public ProjectResponseWithParticipants addMember(String id, String ownerId, String memberId) {
         ProjectModel project = projectRepository.findByIdWithParticipants(id)
                 .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
 
@@ -127,12 +132,44 @@ public class ProjectService {
         ProjectModel updatedProject = projectRepository.addParticipant(id, memberId);
 
 
-        return new ProjectResponse(
+        return new ProjectResponseWithParticipants(
                 updatedProject.getId(),
                 updatedProject.getName(),
                 updatedProject.getDescription(),
-                updatedProject.getOwner().getId()
+                updatedProject.getOwner().getId(),
+                updatedProject.getParticipants().stream().map(user -> new UserSimpleReturn(
+                        user.getId(),
+                        user.getUsername(),
+                        user.getEmail()
+                )).collect(Collectors.toSet())
         );
     }
 
+    public ProjectResponseWithParticipants removeMember(String id, String memberId, String ownerId) {
+        ProjectModel project = projectRepository.findByIdWithParticipants(id)
+                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
+
+        if (!project.getOwner().getId().equals(ownerId)) {
+            throw new ProjectNotFoundException("Project not found");
+        }
+
+        if (project.getParticipants().stream().noneMatch(user -> user.getId().equals(memberId))) {
+            throw new ProjectNotFoundException("Project not found");
+        }
+
+        ProjectModel updatedProject = projectRepository.removeParticipant(id, memberId);
+
+
+        return new ProjectResponseWithParticipants(
+                updatedProject.getId(),
+                updatedProject.getName(),
+                updatedProject.getDescription(),
+                updatedProject.getOwner().getId(),
+                updatedProject.getParticipants().stream().map(user -> new UserSimpleReturn(
+                        user.getId(),
+                        user.getUsername(),
+                        user.getEmail()
+                )).collect(Collectors.toSet())
+        );
+    }
 }

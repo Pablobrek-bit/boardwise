@@ -2,6 +2,7 @@ package com.henrique.pablo.BoardWise.infrastructure.controller;
 
 import com.henrique.pablo.BoardWise.application.dto.project.ProjectRequest;
 import com.henrique.pablo.BoardWise.application.dto.project.ProjectResponse;
+import com.henrique.pablo.BoardWise.application.dto.project.ProjectResponseWithParticipants;
 import com.henrique.pablo.BoardWise.application.service.ProjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -57,15 +58,21 @@ public class ProjectController {
     }
 
     // PROJECT MEMBERS
-    // Add a member to the project. (verificar se o usuário é dono do projeto, se o usuário já é membro do projeto, se o usuário já é membro de outro projeto com o mesmo board)
     @PostMapping("/{id}/members")
-    public ProjectResponse addMember(@PathVariable String id,
-                                     @RequestAttribute("id") String ownerId,
-                                     @RequestParam String memberId){
+    public ProjectResponseWithParticipants addMember(@PathVariable String id,
+                                                     @RequestAttribute("id") String ownerId,
+                                                     @RequestParam String memberId){
         return projectService.addMember(id, ownerId, memberId);
     }
 
     // Remove a member from the project.
+    @PostMapping("/{id}/members/{memberId}")
+    public ProjectResponseWithParticipants removeMember(@PathVariable String id,
+                                                        @PathVariable String memberId,
+                                                        @RequestAttribute("id") String ownerId){
+        return projectService.removeMember(id, memberId, ownerId);
+    }
+
     // List all members of the project (with pagination).
 
 }

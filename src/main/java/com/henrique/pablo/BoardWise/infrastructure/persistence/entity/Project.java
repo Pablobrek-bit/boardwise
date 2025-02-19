@@ -49,6 +49,11 @@ public class Project {
         user.getParticipatingProjects().add(this);
     }
 
+    public void removeParticipant(User user){
+        this.participants.remove(user);
+        user.getParticipatingProjects().remove(this);
+    }
+
     public void setOwner(User owner) {
         this.owner = owner;
         if(owner != null) {
