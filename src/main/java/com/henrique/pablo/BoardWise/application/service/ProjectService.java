@@ -6,6 +6,7 @@ import com.henrique.pablo.BoardWise.application.dto.project.ProjectResponseWithP
 import com.henrique.pablo.BoardWise.application.dto.user.UserResponse;
 import com.henrique.pablo.BoardWise.application.dto.user.UserSimpleReturn;
 import com.henrique.pablo.BoardWise.domain.model.ProjectModel;
+import com.henrique.pablo.BoardWise.domain.model.UserModel;
 import com.henrique.pablo.BoardWise.domain.repository.IProjectRepository;
 import com.henrique.pablo.BoardWise.shared.exception.ProjectNotFoundException;
 import jakarta.validation.Valid;
@@ -171,5 +172,27 @@ public class ProjectService {
                         user.getEmail()
                 )).collect(Collectors.toSet())
         );
+    }
+
+    public Page<UserResponse> listMembers(String id, int page, int size, String sort, String direction, String ownerId) {
+        Pageable pageable = PageRequest.of(page, size,
+                Sort.by(direction.equalsIgnoreCase("asc") ? Sort.Direction.ASC :
+                        Sort.Direction.DESC, sort));
+
+        ProjectModel project = projectRepository.findById(id)
+                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
+
+        if (!project.getOwner().getId().equals(ownerId)) {
+            throw new ProjectNotFoundException("Project not found");
+        }
+
+        Page<UserModel> participants = projectRepository.listParticipants(id, pageable);
+
+        return participants.map(user -> new UserResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getCreatedAt()
+        ));
     }
 }

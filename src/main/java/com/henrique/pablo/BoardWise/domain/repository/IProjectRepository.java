@@ -1,6 +1,7 @@
 package com.henrique.pablo.BoardWise.domain.repository;
 
 import com.henrique.pablo.BoardWise.domain.model.ProjectModel;
+import com.henrique.pablo.BoardWise.domain.model.UserModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -14,4 +15,5 @@ public interface IProjectRepository {
     ProjectModel update(ProjectModel projectModel);
     ProjectModel addParticipant(String projectId, String participantId);
     ProjectModel removeParticipant(String projectId, String participantId);
+    Page<UserModel> listParticipants(String projectId, Pageable pageable);
 }
