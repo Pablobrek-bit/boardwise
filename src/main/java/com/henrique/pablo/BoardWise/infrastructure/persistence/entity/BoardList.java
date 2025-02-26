@@ -2,7 +2,6 @@ package com.henrique.pablo.BoardWise.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.SQLRestriction;
 
 @Getter
 @Setter
@@ -16,7 +15,7 @@ import org.hibernate.annotations.SQLRestriction;
 public class BoardList {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(nullable = false)
