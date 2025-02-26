@@ -44,6 +44,9 @@ public class Project {
     )
     private Set<User> participants = new HashSet<>();
 
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<BoardList> boardLists = new HashSet<>();
+
     public void addParticipant(User user){
         this.participants.add(user);
         user.getParticipatingProjects().add(this);

@@ -5,19 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProjectModel {
-    private String id;
+public class BoardListModel {
+    private Integer id;
     private String name;
-    private String description;
-    private Boolean deleted;
-    private UserModel owner;
-    private Set<UserModel> participants = new HashSet<>();
-    private BoardListModel boardLists;
+    private Integer position;
+    private Set<ProjectModel> projects;
 }
