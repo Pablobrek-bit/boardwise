@@ -9,6 +9,8 @@ import com.henrique.pablo.BoardWise.infrastructure.persistence.repository.projec
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 public class BoardListRepositoryImpl implements IBoardListRepository {
@@ -25,5 +27,12 @@ public class BoardListRepositoryImpl implements IBoardListRepository {
         boardList = boardListJpaRepository.save(boardList);
 
         return BoardListConverter.toDomain(boardList);
+    }
+
+    @Override
+    public List<BoardListModel> listBoardLists(String projectId) {
+        List<BoardList> boardLists = boardListJpaRepository.findAllByProjectId(projectId);
+
+        return boardLists.stream().map(BoardListConverter::toDomain).toList();
     }
 }

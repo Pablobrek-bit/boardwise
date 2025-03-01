@@ -7,6 +7,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/board-list")
 @RequiredArgsConstructor
@@ -25,6 +27,12 @@ public class BoardListController {
 
 
     // Lista todas as listas do projeto.
+    @GetMapping("/{projectId}")
+    public List<BoardListResponse> listBoardList(@PathVariable String projectId,
+                              @RequestAttribute("id") String userId){
+        return boardListService.list(projectId, userId);
+    }
+
     // Atualiza uma lista (ex: nome, posição).
     // Exclui uma lista.
 
