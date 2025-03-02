@@ -72,8 +72,8 @@ public class ProjectService {
         );
     }
 
-    public ProjectResponse updateProject(String id, String ownerId, ProjectRequest projectRequest) {
-        ProjectModel project = projectRepository.findById(id)
+    public ProjectResponse updateProject(String projectId, String ownerId, ProjectRequest projectRequest) {
+        ProjectModel project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
 
         if (!project.getOwner().getId().equals(ownerId)) {

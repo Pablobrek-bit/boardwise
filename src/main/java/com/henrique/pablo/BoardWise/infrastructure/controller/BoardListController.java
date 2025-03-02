@@ -1,6 +1,7 @@
 package com.henrique.pablo.BoardWise.infrastructure.controller;
 
 import com.henrique.pablo.BoardWise.application.dto.boardList.BoardListRequest;
+import com.henrique.pablo.BoardWise.application.dto.boardList.BoardListRequestUpdate;
 import com.henrique.pablo.BoardWise.application.dto.boardList.BoardListResponse;
 import com.henrique.pablo.BoardWise.application.service.BoardListService;
 import jakarta.validation.Valid;
@@ -29,11 +30,19 @@ public class BoardListController {
     // Lista todas as listas do projeto.
     @GetMapping("/{projectId}")
     public List<BoardListResponse> listBoardList(@PathVariable String projectId,
-                              @RequestAttribute("id") String userId){
+                                                 @RequestAttribute("id") String userId){
         return boardListService.list(projectId, userId);
     }
 
     // Atualiza uma lista (ex: nome, posição).
+    @PutMapping("/{projectId}/{boardListId}")
+    public BoardListResponse updateBoardList(@PathVariable String projectId,
+                                             @PathVariable Integer boardListId,
+                                             @Valid @RequestBody BoardListRequestUpdate boardListRequestUpdate,
+                                             @RequestAttribute("id") String userId
+    ) {
+        return boardListService.update(projectId, boardListId, boardListRequestUpdate, userId);
+    }
     // Exclui uma lista.
 
 

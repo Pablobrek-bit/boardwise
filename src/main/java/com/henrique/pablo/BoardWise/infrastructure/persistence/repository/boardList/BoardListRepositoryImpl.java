@@ -15,7 +15,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardListRepositoryImpl implements IBoardListRepository {
 
-    private final ProjectJpaRepository projectJpaRepository;
     private final BoardListJpaRepository boardListJpaRepository;
 
     @Override
@@ -34,5 +33,23 @@ public class BoardListRepositoryImpl implements IBoardListRepository {
         List<BoardList> boardLists = boardListJpaRepository.findAllByProjectId(projectId);
 
         return boardLists.stream().map(BoardListConverter::toDomain).toList();
+    }
+
+    @Override
+    public BoardListModel update(BoardListModel boardListModel, String projectId) {
+        BoardList boardList = BoardListConverter.toEntity(boardListModel);
+
+        boardList.setProject(Project.builder().id(projectId).build());
+
+        boardList = boardListJpaRepository.save(boardList);
+
+        return BoardListConverter.toDomain(boardList);
+    }
+
+    @Override
+    public BoardListModel findById(Integer boardListId) {
+        return boardListJpaRepository.findById(boardListId)
+                .map(BoardListConverter::toDomain)
+                .orElse(null);
     }
 }
