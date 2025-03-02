@@ -52,4 +52,9 @@ public class BoardListRepositoryImpl implements IBoardListRepository {
                 .map(BoardListConverter::toDomain)
                 .orElse(null);
     }
+
+    @Override
+    public void delete(Integer boardListId) {
+        boardListJpaRepository.deleteById(boardListId);
+    }
 }

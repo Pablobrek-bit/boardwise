@@ -45,8 +45,9 @@ public class BoardListService {
         return boardLists.stream().map(boardListModel -> new BoardListResponse(boardListModel.getId(), boardListModel.getName(), boardListModel.getPosition())).toList();
     }
 
+    @Transactional
     public BoardListResponse update(String projectId, Integer boardListId, BoardListRequestUpdate boardListRequestUpdate, String userId) {
-        verifyProjectExistsAndUserBelongProject(projectId, userId);
+        verifyProjectExistsAndUserIsOwner(projectId, userId);
 
         BoardListModel boardListModelFound = boardListRepository.findById(boardListId);
 
@@ -72,6 +73,32 @@ public class BoardListService {
         return new BoardListResponse(boardListUpdated.getId(), boardListUpdated.getName(), boardListUpdated.getPosition());
     }
 
+    @Transactional
+    public void delete(String projectId, Integer boardListId, String userId) {
+        verifyProjectExistsAndUserIsOwner(projectId, userId);
+
+        BoardListModel boardListModelFound = boardListRepository.findById(boardListId);
+
+        if (boardListModelFound == null) {
+            throw new RuntimeException("Board list not found");
+        }
+
+        boardListRepository.delete(boardListId);
+    }
+
+    private void verifyProjectExistsAndUserIsOwner(String projectId, String userId){
+        Optional<ProjectModel> project = projectRepository.findById(projectId);
+
+        if (project.isEmpty()) {
+            throw new ProjectNotFoundException("Project not found");
+        }
+
+        if(!project.get().getOwner().getId().equals(userId)) {
+            throw new RuntimeException("User does not have permission to create a list in this project");
+        }
+
+    }
+
     private void verifyProjectExistsAndUserBelongProject(String projectId, String userId){
         Optional<ProjectModel> project = projectRepository.findById(projectId);
 
@@ -83,4 +110,5 @@ public class BoardListService {
             throw new RuntimeException("User does not have permission to create a list in this project");
         }
     }
+
 }

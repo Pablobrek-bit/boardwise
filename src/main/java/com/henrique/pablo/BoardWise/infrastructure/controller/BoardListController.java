@@ -44,6 +44,12 @@ public class BoardListController {
         return boardListService.update(projectId, boardListId, boardListRequestUpdate, userId);
     }
     // Exclui uma lista.
-
+    @DeleteMapping("/{projectId}/{boardListId}")
+    public void deleteBoardList(@PathVariable String projectId,
+                                @PathVariable Integer boardListId,
+                                @RequestAttribute("id") String userId
+    ) {
+        boardListService.delete(projectId, boardListId, userId);
+    }
 
 }
