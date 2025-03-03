@@ -33,7 +33,7 @@ public class ProjectRepositoryImpl implements IProjectRepository {
 
         project = projectJpaRepository.save(project);
 
-        return ProjectConverter.toDomain(project);
+        return ProjectConverter.toDomainWithoutParticipants(project);
     }
 
     @Transactional

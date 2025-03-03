@@ -57,6 +57,10 @@ public class User implements UserDetails {
     @Builder.Default
     private Set<Project> participatingProjects = new HashSet<>();
 
+    @OneToMany(mappedBy = "assignee", fetch = FetchType.LAZY)
+    @Builder.Default
+    private Set<Card> assignedCards = new HashSet<>();
+
     public void addRole(Role role) {
         this.roles.add(role);
         if (!role.getUsers().contains(this)) {

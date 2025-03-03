@@ -16,4 +16,5 @@ public class BoardListModel {
     private String name;
     private Integer position;
     private Set<ProjectModel> projects;
+    private Set<CardModel> cards;
 }
