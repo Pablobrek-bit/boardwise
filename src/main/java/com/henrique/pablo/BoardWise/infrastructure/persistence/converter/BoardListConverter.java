@@ -21,4 +21,13 @@ public class BoardListConverter {
                 .build();
     }
 
+    public static BoardListModel toDomainWithProject(BoardList boardList) {
+        return BoardListModel.builder()
+                .id(boardList.getId())
+                .name(boardList.getName())
+                .position(boardList.getPosition())
+                .project(ProjectConverter.toDomain(boardList.getProject()))
+                .build();
+    }
+
 }

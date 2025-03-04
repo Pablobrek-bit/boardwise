@@ -11,4 +11,5 @@ public interface IBoardListRepository {
     BoardListModel update(BoardListModel boardListModel, String projectId);
     BoardListModel findById(Integer boardListId);
     void delete(Integer boardListId);
+    BoardListModel findByIdWithProject(Integer boardListId);
 }

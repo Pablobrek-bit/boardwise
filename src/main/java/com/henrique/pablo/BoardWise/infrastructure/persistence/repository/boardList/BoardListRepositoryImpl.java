@@ -54,6 +54,13 @@ public class BoardListRepositoryImpl implements IBoardListRepository {
     }
 
     @Override
+    public BoardListModel findByIdWithProject(Integer boardListId) {
+        return boardListJpaRepository.findById(boardListId)
+                .map(BoardListConverter::toDomainWithProject)
+                .orElse(null);
+    }
+
+    @Override
     public void delete(Integer boardListId) {
         boardListJpaRepository.deleteById(boardListId);
     }
