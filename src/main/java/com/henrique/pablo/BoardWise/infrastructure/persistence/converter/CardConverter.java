@@ -32,7 +32,7 @@ public class CardConverter {
                 .status(cardModel.getStatus())
                 .createdAt(cardModel.getCreatedAt())
                 .updatedAt(cardModel.getUpdatedAt())
-//                .boardList(BoardListConverter.toEntity(cardModel.getBoardList()))
+                .boardList(cardModel.getBoardList() != null ? BoardListConverter.toEntity(cardModel.getBoardList()) : null)
                 .assignee(cardModel.getAssignee() != null ? UserConverter.toEntity(cardModel.getAssignee()) : null)
                 .build();
     }

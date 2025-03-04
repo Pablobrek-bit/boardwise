@@ -70,4 +70,12 @@ public class CardController {
     }
 
     //Move um cartão para outra lista.
+    @PutMapping("/lists/{listId}/cards/{cardId}/move")
+    public void moveCard(@PathVariable Integer listId,
+                        @PathVariable String cardId,
+                        @RequestParam Integer targetListId,
+                        @RequestAttribute("id") String userId
+    ) {
+        cardService.moveCard(listId, cardId, targetListId, userId);
+    }
 }

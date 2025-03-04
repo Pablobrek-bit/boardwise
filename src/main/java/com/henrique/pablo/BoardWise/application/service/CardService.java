@@ -76,19 +76,6 @@ public class CardService {
 
     }
 
-    private BoardListModel verifyIfUserBelongTheProject(Integer listId, String userId) {
-        BoardListModel boardList = boardListRepository.findByIdWithProject(listId);
-
-        ProjectModel project = projectRepository.findByIdWithParticipants(boardList.getProject().getId())
-                .orElseThrow(() -> new RuntimeException("Project not found"));
-
-        if (project.getParticipants().stream().noneMatch(member -> member.getId().equals(userId)) && !project.getOwner().getId().equals(userId)) {
-            throw new RuntimeException("User is not a member of the project");
-        }
-
-        return boardList;
-    }
-
     @Transactional
     public void delete(Integer listId, String cardId, String userId) {
         verifyIfUserBelongTheProject(listId, userId);
@@ -127,5 +114,30 @@ public class CardService {
         cardModel.setAssignee(null);
 
         cardRepository.update(cardModel, boardListModel);
+    }
+
+    @Transactional
+    public void moveCard(Integer listId, String cardId, Integer targetListId, String userId) {
+        BoardListModel boardListModel = verifyIfUserBelongTheProject(listId, userId);
+
+        BoardListModel targetBoardListModel = verifyIfUserBelongTheProject(targetListId, userId);
+
+        CardModel cardModel = cardRepository.findById(cardId)
+                .orElseThrow(() -> new RuntimeException("Card not found"));
+
+        cardRepository.update(cardModel, targetBoardListModel);
+    }
+
+    private BoardListModel verifyIfUserBelongTheProject(Integer listId, String userId) {
+        BoardListModel boardList = boardListRepository.findByIdWithProject(listId);
+
+        ProjectModel project = projectRepository.findByIdWithParticipants(boardList.getProject().getId())
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+
+        if (project.getParticipants().stream().noneMatch(member -> member.getId().equals(userId)) && !project.getOwner().getId().equals(userId)) {
+            throw new RuntimeException("User is not a member of the project");
+        }
+
+        return boardList;
     }
 }
