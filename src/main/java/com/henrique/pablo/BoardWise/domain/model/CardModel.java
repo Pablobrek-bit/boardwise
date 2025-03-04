@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -23,5 +24,5 @@ public class CardModel {
     private LocalDateTime updatedAt;
     private BoardListModel boardList;
     private UserModel assignee;
-
+    private Set<CommentModel> comments;
 }

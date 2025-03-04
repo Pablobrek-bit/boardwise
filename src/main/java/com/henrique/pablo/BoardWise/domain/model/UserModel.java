@@ -23,6 +23,7 @@ public class UserModel {
     private Set<ProjectModel> projects = new HashSet<>();
     private Set<ProjectModel> participatingProjects = new HashSet<>();
     private Set<CardModel> cards = new HashSet<>();
+    private Set<CommentModel> comments = new HashSet<>();
 
     public void addRole(RoleModel role){
         if(roles == null){

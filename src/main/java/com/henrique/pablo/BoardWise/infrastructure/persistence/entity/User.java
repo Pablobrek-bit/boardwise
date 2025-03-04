@@ -61,6 +61,10 @@ public class User implements UserDetails {
     @Builder.Default
     private Set<Card> assignedCards = new HashSet<>();
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    @Builder.Default
+    private Set<Comment> comments = new HashSet<>();
+
     public void addRole(Role role) {
         this.roles.add(role);
         if (!role.getUsers().contains(this)) {
