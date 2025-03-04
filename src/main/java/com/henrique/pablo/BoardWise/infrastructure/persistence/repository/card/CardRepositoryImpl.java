@@ -40,6 +40,7 @@ public class CardRepositoryImpl implements ICardRepository {
     @Override
     public CardModel update(CardModel cardModel, BoardListModel boardList){
         Card card = CardConverter.toEntity(cardModel);
+
         BoardList boardListEntity = BoardList.builder().id(boardList.getId()).build();
 
         card.setBoardList(boardListEntity);
@@ -47,5 +48,10 @@ public class CardRepositoryImpl implements ICardRepository {
         Card cardSaved = cardJpaRepository.save(card);
 
         return CardConverter.toDomain(cardSaved);
+    }
+
+    @Override
+    public void delete(String id) {
+        cardJpaRepository.deleteById(id);
     }
 }

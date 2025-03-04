@@ -41,7 +41,27 @@ public class CardController {
     ) {
         return cardService.update(listId, cardId, cardRequest, userId);
     }
-
     //Excluir um cartão.
+    @DeleteMapping("/lists/{listId}/cards/{cardId}")
+    public void deleteCard(@PathVariable Integer listId,
+                           @PathVariable String cardId,
+                           @RequestAttribute("id") String userId
+    ) {
+        cardService.delete(listId, cardId, userId);
+    }
+
+    //Atribui um usuário a um cartão.
+    @PutMapping("/lists/{listId}/cards/{cardId}/assignee")
+    public void assignUserToCard(@PathVariable Integer listId,
+                                 @PathVariable String cardId,
+                                 @RequestParam String userId,
+                                 @RequestAttribute("id") String requesterId
+    ) {
+        cardService.assignUserToCard(listId, cardId, userId, requesterId);
+    }
+
+    //Remove um usuário de um cartão.
+
+
     //Move um cartão para outra lista.
 }

@@ -11,4 +11,6 @@ public interface ICardRepository {
     Optional<CardModel> findById(String cardId);
 
     CardModel update(CardModel cardModel, BoardListModel boardListModel);
+
+    void delete(String id);
 }

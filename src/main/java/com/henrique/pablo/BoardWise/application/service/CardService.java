@@ -6,12 +6,12 @@ import com.henrique.pablo.BoardWise.application.dto.card.CardResponse;
 import com.henrique.pablo.BoardWise.domain.model.BoardListModel;
 import com.henrique.pablo.BoardWise.domain.model.CardModel;
 import com.henrique.pablo.BoardWise.domain.model.ProjectModel;
+import com.henrique.pablo.BoardWise.domain.model.UserModel;
 import com.henrique.pablo.BoardWise.domain.repository.IBoardListRepository;
 import com.henrique.pablo.BoardWise.domain.repository.ICardRepository;
 import com.henrique.pablo.BoardWise.domain.repository.IProjectRepository;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.converter.CardConverter;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -89,4 +89,27 @@ public class CardService {
         return boardList;
     }
 
+    @Transactional
+    public void delete(Integer listId, String cardId, String userId) {
+        verifyIfUserBelongTheProject(listId, userId);
+
+        cardRepository.findById(cardId)
+                .ifPresent(cardModel -> cardRepository.delete(cardModel.getId()));
+    }
+
+    @Transactional
+    public void assignUserToCard(Integer listId, String cardId, String userId, String requesterId) {
+        BoardListModel boardListModel = verifyIfUserBelongTheProject(listId, requesterId);
+
+        CardModel cardModel = cardRepository.findById(cardId)
+                .orElseThrow(() -> new RuntimeException("Card not found"));
+
+        if (cardModel.getAssignee() != null) {
+            throw new RuntimeException("Card already has an assignee");
+        }
+
+        cardModel.setAssignee(UserModel.builder().id(userId).build());
+
+        cardRepository.update(cardModel, boardListModel);
+    }
 }

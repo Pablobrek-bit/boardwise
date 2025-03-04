@@ -31,7 +31,7 @@ public class UserConverter {
                 .passwordHash(domain.getPasswordHash())
                 .email(domain.getEmail())
                 .createdAt(domain.getCreatedAt())
-                .roles(toRoleEntitiesWithoutUsers(domain.getRoles(), domain))
+                .roles(domain.getRoles() != null ? toRoleEntitiesWithoutUsers(domain.getRoles(), domain) : null)
                 .build();
     }
 
