@@ -9,4 +9,6 @@ public interface ICardRepository {
     CardModel save(CardModel cardModel, BoardListModel boardList, Optional<String> assigneeId);
 
     Optional<CardModel> findById(String cardId);
+
+    CardModel update(CardModel cardModel, BoardListModel boardListModel);
 }

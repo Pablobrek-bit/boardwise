@@ -1,6 +1,7 @@
 package com.henrique.pablo.BoardWise.infrastructure.controller;
 
 import com.henrique.pablo.BoardWise.application.dto.card.CardRequest;
+import com.henrique.pablo.BoardWise.application.dto.card.CardRequestUpdate;
 import com.henrique.pablo.BoardWise.application.dto.card.CardResponse;
 import com.henrique.pablo.BoardWise.application.service.CardService;
 import jakarta.validation.Valid;
@@ -31,8 +32,16 @@ public class CardController {
         return cardService.getCard(cardId, listId, userId);
     }
 
-
     //Atualiza um cartão.
+    @PutMapping("/lists/{listId}/cards/{cardId}")
+    public CardResponse updateCard(@PathVariable Integer listId,
+                                   @PathVariable String cardId,
+                                   @Valid @RequestBody CardRequestUpdate cardRequest,
+                                   @RequestAttribute("id") String userId
+    ) {
+        return cardService.update(listId, cardId, cardRequest, userId);
+    }
+
     //Excluir um cartão.
     //Move um cartão para outra lista.
 }

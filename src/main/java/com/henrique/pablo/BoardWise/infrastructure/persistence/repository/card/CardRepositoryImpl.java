@@ -20,8 +20,6 @@ public class CardRepositoryImpl implements ICardRepository {
 
     @Override
     public CardModel save(CardModel cardModel, BoardListModel boardList, Optional<String> assigneeId) {
-        System.out.println("chegou aqui 1");
-
         Card card = CardConverter.toEntity(cardModel);
 
         card.setBoardList(BoardList.builder().id(boardList.getId()).build());
@@ -37,5 +35,17 @@ public class CardRepositoryImpl implements ICardRepository {
     public Optional<CardModel> findById(String cardId) {
         return cardJpaRepository.findById(cardId)
                 .map(CardConverter::toDomain);
+    }
+
+    @Override
+    public CardModel update(CardModel cardModel, BoardListModel boardList){
+        Card card = CardConverter.toEntity(cardModel);
+        BoardList boardListEntity = BoardList.builder().id(boardList.getId()).build();
+
+        card.setBoardList(boardListEntity);
+
+        Card cardSaved = cardJpaRepository.save(card);
+
+        return CardConverter.toDomain(cardSaved);
     }
 }

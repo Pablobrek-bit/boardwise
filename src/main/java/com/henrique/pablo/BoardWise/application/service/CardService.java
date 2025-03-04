@@ -1,6 +1,7 @@
 package com.henrique.pablo.BoardWise.application.service;
 
 import com.henrique.pablo.BoardWise.application.dto.card.CardRequest;
+import com.henrique.pablo.BoardWise.application.dto.card.CardRequestUpdate;
 import com.henrique.pablo.BoardWise.application.dto.card.CardResponse;
 import com.henrique.pablo.BoardWise.domain.model.BoardListModel;
 import com.henrique.pablo.BoardWise.domain.model.CardModel;
@@ -10,6 +11,7 @@ import com.henrique.pablo.BoardWise.domain.repository.ICardRepository;
 import com.henrique.pablo.BoardWise.domain.repository.IProjectRepository;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.converter.CardConverter;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +47,35 @@ public class CardService {
         return CardConverter.toResponse(cardModel);
     }
 
+    @Transactional
+    public CardResponse update(Integer listId, String cardId, CardRequestUpdate cardRequest, String userId) {
+        BoardListModel boardListModel = verifyIfUserBelongTheProject(listId, userId);
+
+        CardModel cardModel = cardRepository.findById(cardId)
+                .orElseThrow(() -> new RuntimeException("Card not found"));
+
+        if(cardRequest.title() != null){
+            cardModel.setTitle(cardRequest.title());
+        }
+
+        if(cardRequest.description() != null){
+            cardModel.setDescription(cardRequest.description());
+        }
+
+        if(cardRequest.priority() != null){
+            cardModel.setPriority(cardRequest.priority());
+        }
+
+        if(cardRequest.status() != null){
+            cardModel.setStatus(cardRequest.status());
+        }
+
+        CardModel cardModelUpdated = cardRepository.update(cardModel, boardListModel);
+
+        return CardConverter.toResponse(cardModelUpdated);
+
+    }
+
     private BoardListModel verifyIfUserBelongTheProject(Integer listId, String userId) {
         BoardListModel boardList = boardListRepository.findByIdWithProject(listId);
 
@@ -57,4 +88,5 @@ public class CardService {
 
         return boardList;
     }
+
 }
