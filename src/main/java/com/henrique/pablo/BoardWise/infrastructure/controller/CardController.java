@@ -59,9 +59,15 @@ public class CardController {
     ) {
         cardService.assignUserToCard(listId, cardId, userId, requesterId);
     }
-
     //Remove um usuário de um cartão.
-
+    @DeleteMapping("/lists/{listId}/cards/{cardId}/assignee")
+    public void removeUserFromCard(@PathVariable Integer listId,
+                                   @PathVariable String cardId,
+                                   @RequestParam String userId,
+                                   @RequestAttribute("id") String requesterId
+    ) {
+        cardService.removeUserFromCard(listId, cardId, userId, requesterId);
+    }
 
     //Move um cartão para outra lista.
 }

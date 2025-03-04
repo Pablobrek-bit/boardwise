@@ -112,4 +112,20 @@ public class CardService {
 
         cardRepository.update(cardModel, boardListModel);
     }
+
+    @Transactional
+    public void removeUserFromCard(Integer listId, String cardId, String userId, String requesterId) {
+        BoardListModel boardListModel = verifyIfUserBelongTheProject(listId, requesterId);
+
+        CardModel cardModel = cardRepository.findById(cardId)
+                .orElseThrow(() -> new RuntimeException("Card not found"));
+
+        if (cardModel.getAssignee() == null || !cardModel.getAssignee().getId().equals(userId)) {
+            throw new RuntimeException("User is not the assignee of the card");
+        }
+
+        cardModel.setAssignee(null);
+
+        cardRepository.update(cardModel, boardListModel);
+    }
 }
