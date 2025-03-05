@@ -20,7 +20,7 @@ public class UserConverter {
                 .passwordHash(entity.getPasswordHash())
                 .email(entity.getEmail())
                 .createdAt(entity.getCreatedAt())
-                .roles(toRoleModels(entity.getRoles()))
+                .roles(entity.getRoles() != null ? toRoleModels(entity.getRoles()) : null)
                 .build();
     }
 

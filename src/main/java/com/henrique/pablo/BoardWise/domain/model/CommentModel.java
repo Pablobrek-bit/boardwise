@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 public class CommentModel {
 
-    private String id;
+    private Integer id;
     private String content;
     private LocalDateTime createdAt;
     private UserModel user;

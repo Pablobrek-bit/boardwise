@@ -17,7 +17,7 @@ public class CardConverter {
                 .status(card.getStatus())
                 .createdAt(card.getCreatedAt())
                 .updatedAt(card.getUpdatedAt())
-                .boardList(BoardListConverter.toDomain(card.getBoardList()))
+                .boardList(card.getBoardList() != null ? BoardListConverter.toDomain(card.getBoardList()) : null)
                 .assignee(card.getAssignee() != null ? UserConverter.toDomain(card.getAssignee()) : null)
                 .build();
     }
@@ -34,21 +34,6 @@ public class CardConverter {
                 .updatedAt(cardModel.getUpdatedAt())
                 .boardList(cardModel.getBoardList() != null ? BoardListConverter.toEntity(cardModel.getBoardList()) : null)
                 .assignee(cardModel.getAssignee() != null ? UserConverter.toEntity(cardModel.getAssignee()) : null)
-                .build();
-    }
-
-    public static CardModel toDomainWithBoardList(Card card){
-        return CardModel.builder()
-                .id(card.getId())
-                .title(card.getTitle())
-                .description(card.getDescription())
-                .dueDate(card.getDueDate())
-                .priority(card.getPriority())
-                .status(card.getStatus())
-                .createdAt(card.getCreatedAt())
-                .updatedAt(card.getUpdatedAt())
-                .boardList(BoardListConverter.toDomain(card.getBoardList()))
-                .assignee(UserConverter.toDomain(card.getAssignee()))
                 .build();
     }
 
