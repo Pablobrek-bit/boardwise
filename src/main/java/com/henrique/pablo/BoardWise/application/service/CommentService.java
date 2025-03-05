@@ -9,13 +9,11 @@ import com.henrique.pablo.BoardWise.domain.repository.ICardRepository;
 import com.henrique.pablo.BoardWise.domain.repository.ICommentRepository;
 import com.henrique.pablo.BoardWise.domain.repository.IUserRepository;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.converter.CommentConverter;
-import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.Card;
-import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.Comment;
-import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.User;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -36,10 +34,31 @@ public class CommentService {
         commentModel.setUser(UserModel.builder().id(userId).build());
         commentModel.setCard(CardModel.builder().id(cardId).build());
 
-        System.out.println("chegou aqui 1");
-
         CommentModel commentSaved = commentRepository.save(commentModel);
 
         return CommentConverter.modelToResponse(commentSaved);
+    }
+
+    public List<CommentResponse> listComments(String cardId) {
+        cardRepository.findById(cardId).orElseThrow(() -> new RuntimeException("Card not found"));
+
+        List<CommentModel> comments = commentRepository.findByCardId(cardId);
+
+        return comments.stream()
+                .map(CommentConverter::modelToResponse)
+                .toList();
+    }
+
+    @Transactional
+    public void deleteComment(String cardId, String commentId, String userId) {
+        CardModel cardModel = cardRepository.findById(cardId).orElseThrow(() -> new RuntimeException("Card not found"));
+
+        CommentModel commentModel = commentRepository.findById(commentId).orElseThrow(() -> new RuntimeException("Comment not found"));
+
+        if (!cardModel.getAssignee().getId().equals(userId) && !commentModel.getUser().getId().equals(userId)) {
+            throw new RuntimeException("User not allowed to delete this comment");
+        }
+
+        commentRepository.deleteById(commentId);
     }
 }
