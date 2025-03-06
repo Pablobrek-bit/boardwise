@@ -4,11 +4,13 @@ import com.henrique.pablo.BoardWise.application.dto.project.ProjectRequest;
 import com.henrique.pablo.BoardWise.application.dto.project.ProjectResponse;
 import com.henrique.pablo.BoardWise.application.dto.project.ProjectResponseWithParticipants;
 import com.henrique.pablo.BoardWise.application.dto.user.UserResponse;
-import com.henrique.pablo.BoardWise.application.dto.user.UserSimpleReturn;
 import com.henrique.pablo.BoardWise.domain.model.ProjectModel;
 import com.henrique.pablo.BoardWise.domain.model.UserModel;
 import com.henrique.pablo.BoardWise.domain.repository.IProjectRepository;
+import com.henrique.pablo.BoardWise.infrastructure.persistence.converter.ProjectConverter;
+import com.henrique.pablo.BoardWise.infrastructure.persistence.converter.UserConverter;
 import com.henrique.pablo.BoardWise.shared.exception.ProjectNotFoundException;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,14 +19,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
 
     private final IProjectRepository projectRepository;
 
+    @Transactional
     public ProjectResponse createProject(String ownerId, @Valid ProjectRequest projectRequest) {
         ProjectModel projectModel = ProjectModel.builder()
                 .name(projectRequest.name())
@@ -33,12 +34,7 @@ public class ProjectService {
 
         ProjectModel savedProject = projectRepository.save(ownerId, projectModel);
 
-        return new ProjectResponse(
-                savedProject.getId(),
-                savedProject.getName(),
-                savedProject.getDescription(),
-                ownerId
-        );
+        return ProjectConverter.modelToResponse(savedProject);
     }
 
     public Page<ProjectResponse> listProjects(int page, int size, String sort, String direction, String ownerId, String search){
@@ -48,12 +44,7 @@ public class ProjectService {
 
         Page<ProjectModel> projects = projectRepository.findAll(ownerId,pageable, search);
 
-        return projects.map(project -> new ProjectResponse(
-                project.getId(),
-                project.getName(),
-                project.getDescription(),
-                project.getOwner().getId()
-        ));
+        return projects.map(ProjectConverter::modelToResponse);
     }
 
     public ProjectResponse findProjectById(String id, String ownerId) {
@@ -64,14 +55,10 @@ public class ProjectService {
             throw new ProjectNotFoundException("Project not found");
         }
 
-        return new ProjectResponse(
-                project.getId(),
-                project.getName(),
-                project.getDescription(),
-                project.getOwner().getId()
-        );
+        return ProjectConverter.modelToResponse(project);
     }
 
+    @Transactional
     public ProjectResponse updateProject(String projectId, String ownerId, ProjectRequest projectRequest) {
         ProjectModel project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
@@ -90,14 +77,10 @@ public class ProjectService {
 
         ProjectModel updatedProject = projectRepository.update(project);
 
-        return new ProjectResponse(
-                updatedProject.getId(),
-                updatedProject.getName(),
-                updatedProject.getDescription(),
-                updatedProject.getOwner().getId()
-        );
+        return ProjectConverter.modelToResponse(updatedProject);
     }
 
+    @Transactional
     public ProjectResponse deleteProject(String id, String ownerId) {
         ProjectModel project = projectRepository.findById(id)
                 .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
@@ -109,14 +92,10 @@ public class ProjectService {
         project.setDeleted(true);
         ProjectModel updatedProject = projectRepository.update(project);
 
-        return new ProjectResponse(
-                updatedProject.getId(),
-                updatedProject.getName(),
-                updatedProject.getDescription(),
-                updatedProject.getOwner().getId()
-        );
+        return ProjectConverter.modelToResponse(updatedProject);
     }
 
+    @Transactional
     public ProjectResponseWithParticipants addMember(String id, String ownerId, String memberId) {
         ProjectModel project = projectRepository.findByIdWithParticipants(id)
                 .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
@@ -129,23 +108,12 @@ public class ProjectService {
             throw new ProjectNotFoundException("Project not found");
         }
 
-
         ProjectModel updatedProject = projectRepository.addParticipant(id, memberId);
 
-
-        return new ProjectResponseWithParticipants(
-                updatedProject.getId(),
-                updatedProject.getName(),
-                updatedProject.getDescription(),
-                updatedProject.getOwner().getId(),
-                updatedProject.getParticipants().stream().map(user -> new UserSimpleReturn(
-                        user.getId(),
-                        user.getUsername(),
-                        user.getEmail()
-                )).collect(Collectors.toSet())
-        );
+        return ProjectConverter.modelToResponseWithParticipants(updatedProject);
     }
 
+    @Transactional
     public ProjectResponseWithParticipants removeMember(String id, String memberId, String ownerId) {
         ProjectModel project = projectRepository.findByIdWithParticipants(id)
                 .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
@@ -160,18 +128,7 @@ public class ProjectService {
 
         ProjectModel updatedProject = projectRepository.removeParticipant(id, memberId);
 
-
-        return new ProjectResponseWithParticipants(
-                updatedProject.getId(),
-                updatedProject.getName(),
-                updatedProject.getDescription(),
-                updatedProject.getOwner().getId(),
-                updatedProject.getParticipants().stream().map(user -> new UserSimpleReturn(
-                        user.getId(),
-                        user.getUsername(),
-                        user.getEmail()
-                )).collect(Collectors.toSet())
-        );
+        return ProjectConverter.modelToResponseWithParticipants(updatedProject);
     }
 
     public Page<UserResponse> listMembers(String id, int page, int size, String sort, String direction, String ownerId) {
@@ -188,11 +145,6 @@ public class ProjectService {
 
         Page<UserModel> participants = projectRepository.listParticipants(id, pageable);
 
-        return participants.map(user -> new UserResponse(
-                user.getId(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getCreatedAt()
-        ));
+        return participants.map(UserConverter::modelToResponse);
     }
 }

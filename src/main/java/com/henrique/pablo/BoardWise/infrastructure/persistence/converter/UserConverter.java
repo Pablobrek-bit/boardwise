@@ -2,6 +2,7 @@ package com.henrique.pablo.BoardWise.infrastructure.persistence.converter;
 
 import com.henrique.pablo.BoardWise.application.dto.user.UserRequest;
 import com.henrique.pablo.BoardWise.application.dto.user.UserResponse;
+import com.henrique.pablo.BoardWise.application.dto.user.UserSimpleReturn;
 import com.henrique.pablo.BoardWise.domain.model.RoleModel;
 import com.henrique.pablo.BoardWise.domain.model.UserModel;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.Role;
@@ -50,6 +51,14 @@ public class UserConverter {
                 domain.getUsername(),
                 domain.getEmail(),
                 domain.getCreatedAt()
+        );
+    }
+
+    public static UserSimpleReturn modelToSimpleReturn(UserModel domain){
+        return new UserSimpleReturn(
+                domain.getId(),
+                domain.getUsername(),
+                domain.getEmail()
         );
     }
 

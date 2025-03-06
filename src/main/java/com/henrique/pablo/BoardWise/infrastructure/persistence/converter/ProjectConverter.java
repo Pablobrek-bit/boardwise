@@ -1,7 +1,8 @@
 package com.henrique.pablo.BoardWise.infrastructure.persistence.converter;
 
+import com.henrique.pablo.BoardWise.application.dto.project.ProjectResponse;
+import com.henrique.pablo.BoardWise.application.dto.project.ProjectResponseWithParticipants;
 import com.henrique.pablo.BoardWise.domain.model.ProjectModel;
-import com.henrique.pablo.BoardWise.domain.model.RoleModel;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.Project;
 
 import java.util.stream.Collectors;
@@ -9,8 +10,6 @@ import java.util.stream.Collectors;
 public class ProjectConverter {
 
     public static ProjectModel toDomain(Project entity){
-        if(entity == null) return null;
-
         return ProjectModel.builder()
                 .id(entity.getId())
                 .name(entity.getName())
@@ -22,8 +21,6 @@ public class ProjectConverter {
     }
 
     public static ProjectModel toDomainWithoutParticipants(Project entity){
-        if(entity == null) return null;
-
         return ProjectModel.builder()
                 .id(entity.getId())
                 .name(entity.getName())
@@ -34,8 +31,6 @@ public class ProjectConverter {
     }
 
     public static Project toEntity(ProjectModel model){
-        if(model == null) return null;
-
         return Project.builder()
                 .id(model.getId())
                 .name(model.getName())
@@ -45,34 +40,30 @@ public class ProjectConverter {
                 .build();
     }
 
-    public static Project toEntityWithoutOwner(ProjectModel model){
-        if(model == null) return null;
-
+    public static Project toEntityWithoutParticipants(ProjectModel model){
         return Project.builder()
                 .id(model.getId())
                 .name(model.getName())
                 .description(model.getDescription())
-                .participants(model.getParticipants().stream()
-                        .map(participant -> {
-                            if (participant.getRoles() == null || participant.getRoles().isEmpty()) {
-                                RoleModel defaultRole = RoleModel.builder()
-                                        .name("ROLE_USER")
-                                        .build();
-                                participant.addRole(defaultRole);
-                            }
-                            return UserConverter.toEntity(participant);
-                        })
-                        .collect(Collectors.toSet()))
                 .build();
     }
 
-    public static Project toEntityWithoutParticipants(ProjectModel model){
-        if(model == null) return null;
+    public static ProjectResponse modelToResponse(ProjectModel model){
+        return new ProjectResponse(
+                model.getId(),
+                model.getName(),
+                model.getDescription(),
+                model.getOwner().getId()
+        );
+    }
 
-        return Project.builder()
-                .id(model.getId())
-                .name(model.getName())
-                .description(model.getDescription())
-                .build();
+    public static ProjectResponseWithParticipants modelToResponseWithParticipants(ProjectModel model){
+        return new ProjectResponseWithParticipants(
+                model.getId(),
+                model.getName(),
+                model.getDescription(),
+                model.getOwner().getId(),
+                model.getParticipants().stream().map(UserConverter::modelToSimpleReturn).collect(Collectors.toSet())
+        );
     }
 }
