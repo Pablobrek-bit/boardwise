@@ -95,7 +95,7 @@ public class ProjectRepositoryImpl implements IProjectRepository {
         Optional<Project> project = projectJpaRepository.findByIdWithParticipantsOnly(projectId);
 
         if(project.isEmpty()){
-            throw new RuntimeException("Project not found");
+            throw new RuntimeException("Project don't have participants");
         }
 
         List<UserModel> participants = project.get().getParticipants().stream()
