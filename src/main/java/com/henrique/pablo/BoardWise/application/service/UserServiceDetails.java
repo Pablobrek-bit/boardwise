@@ -1,4 +1,4 @@
-package com.henrique.pablo.BoardWise.domain.service;
+package com.henrique.pablo.BoardWise.application.service;
 
 import com.henrique.pablo.BoardWise.domain.repository.IUserRepository;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.converter.UserConverter;

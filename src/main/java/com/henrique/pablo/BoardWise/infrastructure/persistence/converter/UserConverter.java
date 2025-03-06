@@ -35,6 +35,24 @@ public class UserConverter {
                 .build();
     }
 
+    public static UserModel requestToDomain(UserRequest request, String passwordEncoded){
+        return UserModel.builder()
+                .username(request.username())
+                .email(request.email())
+                .passwordHash(passwordEncoded)
+                .createdAt(LocalDateTime.now())
+                .build();
+    }
+
+    public static UserResponse modelToResponse(UserModel domain){
+        return new UserResponse(
+                domain.getId(),
+                domain.getUsername(),
+                domain.getEmail(),
+                domain.getCreatedAt()
+        );
+    }
+
     private static Set<RoleModel> toRoleModels(Set<Role> roles) {
         return roles.stream()
                 .map(role -> RoleModel.builder()
@@ -70,23 +88,4 @@ public class UserConverter {
                 .build();
     }
 
-
-    public static User requestToEntity(UserRequest request) {
-        return User.builder()
-                .username(request.username())
-                .passwordHash(request.password())
-                .email(request.email())
-                .createdAt(LocalDateTime.now())
-                .build();
-
-    }
-
-    public static User responseToEntity(UserResponse user) {
-        return User.builder()
-                .id(user.id())
-                .username(user.username())
-                .email(user.email())
-                .createdAt(user.createdAt())
-                .build();
-    }
 }

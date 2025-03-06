@@ -7,6 +7,7 @@ import com.henrique.pablo.BoardWise.domain.model.RoleModel;
 import com.henrique.pablo.BoardWise.domain.model.UserModel;
 import com.henrique.pablo.BoardWise.domain.repository.IRoleRepository;
 import com.henrique.pablo.BoardWise.domain.repository.IUserRepository;
+import com.henrique.pablo.BoardWise.infrastructure.persistence.converter.UserConverter;
 import com.henrique.pablo.BoardWise.shared.exception.EmailAlreadyExistsException;
 import com.henrique.pablo.BoardWise.shared.exception.IdNotFoundException;
 import com.henrique.pablo.BoardWise.shared.exception.RoleNotFoundException;
@@ -32,12 +33,9 @@ public class UserService {
             throw new EmailAlreadyExistsException("Email already in use");
         });
 
-        UserModel user = UserModel.builder()
-                .username(request.username())
-                .email(request.email())
-                .passwordHash(encoder.encode(request.password()))
-                .createdAt(LocalDateTime.now())
-                .build();
+        String passwordEncoded = encoder.encode(request.password());
+
+        UserModel user = UserConverter.requestToDomain(request, passwordEncoded);
 
         RoleModel defaultRole = roleRepository.findByName("ROLE_USER")
                 .orElseThrow(() -> new RoleNotFoundException("Role not found"));
@@ -46,17 +44,12 @@ public class UserService {
 
         UserModel savedUser = userRepository.save(user);
 
-        return new UserResponse(
-                savedUser.getId(),
-                savedUser.getUsername(),
-                savedUser.getEmail(),
-                savedUser.getCreatedAt()
-        );
+        return UserConverter.modelToResponse(savedUser);
     }
 
     public UserResponse getUser(String id){
         return userRepository.findById(id)
-                .map(user -> new UserResponse(user.getId(), user.getUsername(), user.getEmail(), user.getCreatedAt()))
+                .map(UserConverter::modelToResponse)
                 .orElseThrow(() -> new IdNotFoundException("User not found"));
     }
 
@@ -79,11 +72,6 @@ public class UserService {
 
         UserModel updatedUser = userRepository.save(user);
 
-        return new UserResponse(
-                updatedUser.getId(),
-                updatedUser.getUsername(),
-                updatedUser.getEmail(),
-                updatedUser.getCreatedAt()
-        );
+        return UserConverter.modelToResponse(updatedUser);
     }
 }
