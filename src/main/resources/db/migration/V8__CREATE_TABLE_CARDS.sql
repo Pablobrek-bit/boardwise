@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS cards (
     status VARCHAR(20),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    board_list_id SERIAL NOT NULL,
+    board_list_id INT NOT NULL,
     assignee_id VARCHAR(255),
     FOREIGN KEY (board_list_id) REFERENCES board_list(id) ON DELETE CASCADE,
     FOREIGN KEY (assignee_id) REFERENCES users(id) ON DELETE SET NULL

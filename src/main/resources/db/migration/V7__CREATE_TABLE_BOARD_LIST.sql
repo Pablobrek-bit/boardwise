@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS board_list (
-    id SERIAL PRIMARY KEY,
+    id INT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     position INT NOT NULL,
     project_id VARCHAR(255) NOT NULL,
