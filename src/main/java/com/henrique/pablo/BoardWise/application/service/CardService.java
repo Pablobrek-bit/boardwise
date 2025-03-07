@@ -11,6 +11,7 @@ import com.henrique.pablo.BoardWise.domain.repository.IBoardListRepository;
 import com.henrique.pablo.BoardWise.domain.repository.ICardRepository;
 import com.henrique.pablo.BoardWise.domain.repository.IProjectRepository;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.converter.CardConverter;
+import com.henrique.pablo.BoardWise.shared.exception.IdNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -52,7 +53,7 @@ public class CardService {
         BoardListModel boardListModel = verifyIfUserBelongTheProject(listId, userId);
 
         CardModel cardModel = cardRepository.findById(cardId)
-                .orElseThrow(() -> new RuntimeException("Card not found"));
+                .orElseThrow(() -> new IdNotFoundException("Card not found"));
 
         if(cardRequest.title() != null){
             cardModel.setTitle(cardRequest.title());
@@ -89,7 +90,7 @@ public class CardService {
         BoardListModel boardListModel = verifyIfUserBelongTheProject(listId, requesterId);
 
         CardModel cardModel = cardRepository.findById(cardId)
-                .orElseThrow(() -> new RuntimeException("Card not found"));
+                .orElseThrow(() -> new IdNotFoundException("Card not found"));
 
         if (cardModel.getAssignee() != null) {
             throw new RuntimeException("Card already has an assignee");
@@ -105,7 +106,7 @@ public class CardService {
         BoardListModel boardListModel = verifyIfUserBelongTheProject(listId, requesterId);
 
         CardModel cardModel = cardRepository.findById(cardId)
-                .orElseThrow(() -> new RuntimeException("Card not found"));
+                .orElseThrow(() -> new IdNotFoundException("Card not found"));
 
         if (cardModel.getAssignee() == null || !cardModel.getAssignee().getId().equals(userId)) {
             throw new RuntimeException("User is not the assignee of the card");
@@ -118,12 +119,12 @@ public class CardService {
 
     @Transactional
     public void moveCard(Integer listId, String cardId, Integer targetListId, String userId) {
-        BoardListModel boardListModel = verifyIfUserBelongTheProject(listId, userId);
+        verifyIfUserBelongTheProject(listId, userId);
 
         BoardListModel targetBoardListModel = verifyIfUserBelongTheProject(targetListId, userId);
 
         CardModel cardModel = cardRepository.findById(cardId)
-                .orElseThrow(() -> new RuntimeException("Card not found"));
+                .orElseThrow(() -> new IdNotFoundException("Card not found"));
 
         cardRepository.update(cardModel, targetBoardListModel);
     }
@@ -132,7 +133,7 @@ public class CardService {
         BoardListModel boardList = boardListRepository.findByIdWithProject(listId);
 
         ProjectModel project = projectRepository.findByIdWithParticipants(boardList.getProject().getId())
-                .orElseThrow(() -> new RuntimeException("Project not found"));
+                .orElseThrow(() -> new IdNotFoundException("Project not found"));
 
         if (project.getParticipants().stream().noneMatch(member -> member.getId().equals(userId)) && !project.getOwner().getId().equals(userId)) {
             throw new RuntimeException("User is not a member of the project");
