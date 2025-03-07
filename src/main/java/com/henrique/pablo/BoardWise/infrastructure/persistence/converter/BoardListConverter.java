@@ -1,5 +1,7 @@
 package com.henrique.pablo.BoardWise.infrastructure.persistence.converter;
 
+import com.henrique.pablo.BoardWise.application.dto.boardList.BoardListRequest;
+import com.henrique.pablo.BoardWise.application.dto.boardList.BoardListResponse;
 import com.henrique.pablo.BoardWise.domain.model.BoardListModel;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.BoardList;
 
@@ -28,6 +30,17 @@ public class BoardListConverter {
                 .position(boardList.getPosition())
                 .project(ProjectConverter.toDomain(boardList.getProject()))
                 .build();
+    }
+
+    public static BoardListModel requestToDomain(BoardListRequest boardListRequest) {
+        return BoardListModel.builder()
+                .name(boardListRequest.name())
+                .position(boardListRequest.position())
+                .build();
+    }
+
+    public static BoardListResponse domainToResponse(BoardListModel boardListModel) {
+        return new BoardListResponse(boardListModel.getId(), boardListModel.getName(), boardListModel.getPosition());
     }
 
 }

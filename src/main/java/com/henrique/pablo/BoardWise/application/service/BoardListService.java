@@ -7,9 +7,9 @@ import com.henrique.pablo.BoardWise.domain.model.BoardListModel;
 import com.henrique.pablo.BoardWise.domain.model.ProjectModel;
 import com.henrique.pablo.BoardWise.domain.repository.IBoardListRepository;
 import com.henrique.pablo.BoardWise.domain.repository.IProjectRepository;
+import com.henrique.pablo.BoardWise.infrastructure.persistence.converter.BoardListConverter;
 import com.henrique.pablo.BoardWise.shared.exception.ProjectNotFoundException;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,10 +27,7 @@ public class BoardListService {
     public BoardListResponse create(String projectId, BoardListRequest boardListRequest, String userId) {
         verifyProjectExistsAndUserBelongProject(projectId, userId);
 
-        BoardListModel boardListModel = BoardListModel.builder()
-                .name(boardListRequest.name())
-                .position(boardListRequest.position())
-                .build();
+        BoardListModel boardListModel = BoardListConverter.requestToDomain(boardListRequest);
 
         BoardListModel boardListSaved = boardListRepository.save(projectId, boardListModel);
 
@@ -42,7 +39,7 @@ public class BoardListService {
 
         List<BoardListModel> boardLists = boardListRepository.listBoardLists(projectId);
 
-        return boardLists.stream().map(boardListModel -> new BoardListResponse(boardListModel.getId(), boardListModel.getName(), boardListModel.getPosition())).toList();
+        return boardLists.stream().map(BoardListConverter::domainToResponse).toList();
     }
 
     @Transactional
@@ -70,7 +67,7 @@ public class BoardListService {
                 .build();
 
         BoardListModel boardListUpdated = boardListRepository.update(boardListModel, projectId);
-        return new BoardListResponse(boardListUpdated.getId(), boardListUpdated.getName(), boardListUpdated.getPosition());
+        return BoardListConverter.domainToResponse(boardListUpdated);
     }
 
     @Transactional
