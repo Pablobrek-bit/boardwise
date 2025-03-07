@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 [![Swagger](https://img.shields.io/badge/Documentação-Swagger-%2385EA2D)](http://localhost:8080/swagger-ui.html)
 
-Uma API RESTful para gerenciamento de projetos no estilo Kanban, inspirada em ferramentas como Trello e Jira. Gerencie projetos, listas, cartões (tarefas), comentários e muito mais!
+Uma API RESTful para o gerenciamento de projetos no estilo Kanban, inspirada em ferramentas como Trello e Jira. Gerencie projetos, listas, cartões (tarefas), comentários e muito mais!
 
 ---
 
@@ -13,12 +13,9 @@ Uma API RESTful para gerenciamento de projetos no estilo Kanban, inspirada em fe
 - [Funcionalidades](#-funcionalidades)
 - [Tecnologias Utilizadas](#-tecnologias-utilizadas)
 - [Instalação](#-instalação)
-- [Documentação da API](#-documentação-da-api)
 - [Variáveis de Ambiente](#-variáveis-de-ambiente)
-- [Como Usar](#-como-usar)
 - [Contribuição](#-contribuição)
 - [Licença](#-licença)
-- [Roadmap](#-roadmap)
 
 ---
 
@@ -42,22 +39,77 @@ Uma API RESTful para gerenciamento de projetos no estilo Kanban, inspirada em fe
 ---
 
 ## 🛠️ Tecnologias Utilizadas
-| Categoria          | Tecnologias                                                                 |
-|---------------------|----------------------------------------------------------------------------|
-| **Backend**         | Java 17, Spring Boot 3.x, Spring Data JPA, Spring Security                 |
-| **Banco de Dados**  | PostgreSQL, Redis (cache)                                                  |
-| **Autenticação**    | JWT, OAuth2 (opcional para login social)                                  |
-| **Armazenamento**   | AWS S3 / Google Cloud Storage (anexos)                                     |
-| **Documentação**    | Swagger/OpenAPI                                                            |
-| **Testes**          | JUnit 5, Mockito, Testcontainers                                           |
+| Categoria          | Tecnologias                                             |
+|---------------------|---------------------------------------------------------|
+| **Backend**         | Java 21, Spring Boot 3.x, Spring Data JPA, Spring Security |
+| **Banco de Dados**  | PostgreSQL                                              |
+| **Autenticação**    | JWT                 |
+| **Armazenamento**   | AWS S3 / Google Cloud Storage (anexos)                  |
+| **Documentação**    | Swagger/OpenAPI                                         |
+| **Testes**          | JUnit 5, Mockito, Testcontainers                        |
 
 ---
 
 ## 🚀 Instalação
 
 ### Pré-requisitos
-- Java 17+
+- Java 21+
 - Maven
 - PostgreSQL
-- Redis (opcional para cache)
 - Conta em AWS S3/Google Cloud (opcional para anexos)
+
+### Passo a Passo
+1. **Clone o repositório**
+   ```bash
+   git clone
+    ```
+2. **Crie um banco de dados no PostgreSQL**
+3. **Configure o banco de dados no arquivo `application.properties`**
+    ```bash
+    spring.datasource.url=jdbc:postgresql://localhost:5432/boardwise
+    spring.datasource.username=postgres
+    spring.datasource.password=secret
+    ```
+4. **Configure as variáveis de ambiente (veja [Variáveis de Ambiente](#-variáveis-de-ambiente))**
+5. **Compile e execute**
+    ```bash
+    mvn clean install
+    mvn spring-boot:run
+    ```
+6. **Acesse a documentação da API em `http://localhost:8080/swagger-ui.html`**
+7. **Pronto! A API está rodando em `http://localhost:8080`**
+8. **Para parar a execução, pressione `Ctrl + C`**
+9. **Para rodar os testes, execute `mvn test`**
+10. **Para gerar um JAR, execute `mvn package`**
+
+---
+## 🔧 Variáveis de Ambiente
+Crie um arquivo `.env` na raiz do projeto ou configure no application.properties.
+
+```bash
+# Configurações do banco de dados
+SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/boardwise
+SPRING_DATASOURCE_USERNAME=postgres
+SPRING_DATASOURCE_PASSWORD=secret
+
+# Configurações do JWT
+JWT_SECRET=SUA_SENHA_SECRETA
+JWT_EXPIRATION=86400000 # 24 horas
+```
+
+---
+## 🤝 Contribuição
+1. Faça um fork do projeto
+2. Crie uma nova branch (`git checkout -b feature/nova-feature`)
+3. Faça um commit das mudanças (`git commit -am 'Adiciona nova feature'`)
+4. Faça um push para a branch (`git push origin feature/nova-feature`)
+5. Crie um novo Pull Request
+
+---
+## 📝 Licença
+Distribuído sob a licença MIT. Veja `LICENSE` para mais informações.
+
+
+
+
+
