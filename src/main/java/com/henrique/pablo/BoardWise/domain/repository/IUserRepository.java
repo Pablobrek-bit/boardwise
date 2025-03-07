@@ -9,6 +9,5 @@ public interface IUserRepository{
     UserModel save(UserModel user);
     Optional<UserModel> findById(String id);
     Optional<UserModel> findByEmail(String email);
-    Optional<User> findByEmailWithRoles(String email);
     Optional<User> findByIdWithRoles(String id);
 }

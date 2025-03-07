@@ -38,11 +38,4 @@ public class Role implements GrantedAuthority {
         return name;
     }
 
-    public void addUser(User user) {
-        this.users.add(user);
-        if (!user.getRoles().contains(this)) {
-            user.getRoles().add(this);
-        }
-    }
-
 }

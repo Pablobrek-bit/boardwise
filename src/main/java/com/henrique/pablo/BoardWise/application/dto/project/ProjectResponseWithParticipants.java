@@ -1,6 +1,5 @@
 package com.henrique.pablo.BoardWise.application.dto.project;
 
-import com.henrique.pablo.BoardWise.application.dto.user.UserResponse;
 import com.henrique.pablo.BoardWise.application.dto.user.UserSimpleReturn;
 
 import java.util.Set;

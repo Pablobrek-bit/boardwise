@@ -72,18 +72,6 @@ public class User implements UserDetails {
         }
     }
 
-    public void addProject(Project project) {
-        this.participatingProjects.add(project);
-        if (!project.getParticipants().contains(this)) {
-            project.getParticipants().add(this);
-        }
-    }
-
-    public void removeProject(Project project) {
-        this.participatingProjects.remove(project);
-        project.getParticipants().remove(this);
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toSet());
