@@ -61,13 +61,7 @@ public class BoardListService {
             boardListModelFound.setPosition(boardListRequestUpdate.position());
         }
 
-        BoardListModel boardListModel = BoardListModel.builder()
-                .id(boardListId)
-                .name(boardListModelFound.getName())
-                .position(boardListModelFound.getPosition())
-                .build();
-
-        BoardListModel boardListUpdated = boardListRepository.update(boardListModel, projectId);
+        BoardListModel boardListUpdated = boardListRepository.update(boardListModelFound, projectId);
         return BoardListConverter.domainToResponse(boardListUpdated);
     }
 
