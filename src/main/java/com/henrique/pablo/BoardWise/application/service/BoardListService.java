@@ -8,6 +8,7 @@ import com.henrique.pablo.BoardWise.domain.model.ProjectModel;
 import com.henrique.pablo.BoardWise.domain.repository.IBoardListRepository;
 import com.henrique.pablo.BoardWise.domain.repository.IProjectRepository;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.converter.BoardListConverter;
+import com.henrique.pablo.BoardWise.shared.exception.IdNotFoundException;
 import com.henrique.pablo.BoardWise.shared.exception.ProjectNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +50,7 @@ public class BoardListService {
         BoardListModel boardListModelFound = boardListRepository.findById(boardListId);
 
         if (boardListModelFound == null) {
-            throw new RuntimeException("Board list not found");
+            throw new IdNotFoundException("Board list not found");
         }
 
         if(boardListRequestUpdate.name() != null){
@@ -77,7 +78,7 @@ public class BoardListService {
         BoardListModel boardListModelFound = boardListRepository.findById(boardListId);
 
         if (boardListModelFound == null) {
-            throw new RuntimeException("Board list not found");
+            throw new IdNotFoundException("Board list not found");
         }
 
         boardListRepository.delete(boardListId);
