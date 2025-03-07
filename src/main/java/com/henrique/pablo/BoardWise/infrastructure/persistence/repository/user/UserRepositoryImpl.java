@@ -46,11 +46,6 @@ public class UserRepositoryImpl implements IUserRepository {
     }
 
     @Override
-    public Optional<User> findByEmailWithRoles(String email) {
-        return userJpaRepository.findByEmailWithRoles(email);
-    }
-
-    @Override
     public Optional<User> findByIdWithRoles(String id) {
         return userJpaRepository.findByIdWithRoles(id);
     }

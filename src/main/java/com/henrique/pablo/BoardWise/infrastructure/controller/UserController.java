@@ -21,7 +21,6 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<UserResponse> createUser(
             @Valid @RequestBody UserRequest request,
             UriComponentsBuilder uriBuilder
@@ -32,8 +31,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserResponse getUser(@PathVariable String id) {
-        return userService.getUser(id);
+    public UserResponse getUser(@PathVariable String userId) {
+        return userService.getUserById(userId);
     }
 
     @PutMapping()
