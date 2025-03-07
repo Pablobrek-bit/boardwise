@@ -7,6 +7,7 @@ import com.henrique.pablo.BoardWise.shared.utils.TokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,9 +19,9 @@ public class AuthService {
     public JwtResponse auth(LoginRequest loginRequest){
         String token = "";
 
-        var tokenUsername = new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password());
+        UsernamePasswordAuthenticationToken tokenUsername = new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password());
 
-        var authentication = authenticationManager.authenticate(tokenUsername);
+        Authentication authentication = authenticationManager.authenticate(tokenUsername);
 
         if(authentication.isAuthenticated()){
             token = TokenUtil.generateToken((User) authentication.getPrincipal());
