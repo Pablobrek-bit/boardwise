@@ -21,11 +21,6 @@ public class UserRepositoryImpl implements IUserRepository {
     public UserModel save(UserModel user) {
         User userEntity = UserConverter.toEntity(user);
 
-//        Role defaultRole = RoleConverter.toEntity(roleRepository.findByName("ROLE_USER")
-//                .orElseThrow(() -> new RuntimeException("Role not found")));
-//
-//        userEntity.addRole(defaultRole);
-
         return UserConverter.toDomain(userJpaRepository.save(userEntity));
     }
 

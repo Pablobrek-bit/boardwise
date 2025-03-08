@@ -1,6 +1,7 @@
 package com.henrique.pablo.BoardWise.domain.repository;
 
 import com.henrique.pablo.BoardWise.domain.model.RoleModel;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
