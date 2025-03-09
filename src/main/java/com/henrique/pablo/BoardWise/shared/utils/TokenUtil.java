@@ -22,6 +22,14 @@ public class TokenUtil {
                 .sign(algorithm);
     }
 
+    public static String generateToken(String userId){
+        Algorithm algorithm = Algorithm.HMAC256(SECRET);
+        return JWT.create()
+                .withIssuer("BoardWise")
+                .withSubject(String.valueOf(userId))
+                .sign(algorithm);
+    }
+
     public DecodedJWT decodeToken(String token){
         try {
             Algorithm algorithm = Algorithm.HMAC256(SECRET);
