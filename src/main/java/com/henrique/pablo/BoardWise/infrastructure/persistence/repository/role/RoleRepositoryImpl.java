@@ -16,11 +16,11 @@ public class RoleRepositoryImpl implements IRoleRepository {
 
     @Override
     public Optional<RoleModel> findByName(String name) {
-        return RoleConverter.toDomain(roleJpaRepository.findByName(name));
+        return roleJpaRepository.findByName(name).map(RoleConverter::toDomain);
     }
 
     @Override
     public Optional<RoleModel> findById(Integer id) {
-        return RoleConverter.toDomain(roleJpaRepository.findById(id));
+        return roleJpaRepository.findById(id).map(RoleConverter::toDomain);
     }
 }
