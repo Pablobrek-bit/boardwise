@@ -30,12 +30,13 @@ public class UserController {
         return ResponseEntity.created(location).body(response);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{userId}")
     public UserResponse getUser(@PathVariable String userId) {
         return userService.getUserById(userId);
     }
 
     @PutMapping()
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public UserResponse updateUser(@RequestAttribute(name = "id") String id, @Valid @RequestBody UserUpdateRequest request) {
         return userService.updateUser(id, request);
     }
