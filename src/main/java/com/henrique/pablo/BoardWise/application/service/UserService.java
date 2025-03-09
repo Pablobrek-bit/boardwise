@@ -47,6 +47,10 @@ public class UserService {
         UserModel user = userRepository.findById(id)
                 .orElseThrow(() -> new IdNotFoundException("User not found"));
 
+        if(request.email() != null){
+            validateEmailUniqueness(request.email());
+        }
+
         updateUserFields(user, request);
         UserModel updatedUser = userRepository.save(user);
 
