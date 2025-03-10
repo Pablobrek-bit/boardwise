@@ -17,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
@@ -169,11 +170,4 @@ class UserServiceTest {
         Mockito.verify(userRepository).findByEmail(this.existingEmail);
         Mockito.verify(userRepository, Mockito.never()).save(Mockito.any(UserModel.class));
     }
-
-
-
-
-//    @Test
-//    void updateUser() {
-//    }
 }
