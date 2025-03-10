@@ -6,6 +6,7 @@ import com.henrique.pablo.BoardWise.application.dto.card.CardResponse;
 import com.henrique.pablo.BoardWise.application.service.CardService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -43,6 +44,7 @@ public class CardController {
     }
     //Excluir um cartão.
     @DeleteMapping("/lists/{listId}/cards/{cardId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCard(@PathVariable Integer listId,
                            @PathVariable String cardId,
                            @RequestAttribute("id") String userId
@@ -52,6 +54,7 @@ public class CardController {
 
     //Atribui um usuário a um cartão.
     @PutMapping("/lists/{listId}/cards/{cardId}/assignee")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void assignUserToCard(@PathVariable Integer listId,
                                  @PathVariable String cardId,
                                  @RequestParam String userId,
@@ -61,6 +64,7 @@ public class CardController {
     }
     //Remove um usuário de um cartão.
     @DeleteMapping("/lists/{listId}/cards/{cardId}/assignee")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeUserFromCard(@PathVariable Integer listId,
                                    @PathVariable String cardId,
                                    @RequestParam String userId,
@@ -71,6 +75,7 @@ public class CardController {
 
     //Move um cartão para outra lista.
     @PutMapping("/lists/{listId}/cards/{cardId}/move")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void moveCard(@PathVariable Integer listId,
                         @PathVariable String cardId,
                         @RequestParam Integer targetListId,

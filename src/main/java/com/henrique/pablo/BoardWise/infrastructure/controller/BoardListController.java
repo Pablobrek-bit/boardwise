@@ -6,6 +6,7 @@ import com.henrique.pablo.BoardWise.application.dto.boardList.BoardListResponse;
 import com.henrique.pablo.BoardWise.application.service.BoardListService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,6 +46,7 @@ public class BoardListController {
     }
     // Exclui uma lista.
     @DeleteMapping("/{projectId}/{boardListId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBoardList(@PathVariable String projectId,
                                 @PathVariable Integer boardListId,
                                 @RequestAttribute("id") String userId
