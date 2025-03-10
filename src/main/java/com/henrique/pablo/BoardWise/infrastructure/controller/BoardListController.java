@@ -27,10 +27,9 @@ public class BoardListController {
         return boardListService.create(projectId, boardListRequest, userId);
     }
 
-
     // Lista todas as listas do projeto.
     @GetMapping("/{projectId}")
-    public List<BoardListResponse> listBoardList(@PathVariable String projectId,
+    public List<BoardListResponse> listBoardListByProject(@PathVariable String projectId,
                                                  @RequestAttribute("id") String userId){
         return boardListService.list(projectId, userId);
     }
