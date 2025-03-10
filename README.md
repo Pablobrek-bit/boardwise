@@ -1,5 +1,7 @@
 # BoardWise API 🚀
 
+![CI Status](https://github.com/<seu-user>/<seu-repo>/workflows/Java%20CI/badge.svg)
+
 [![Java](https://img.shields.io/badge/Java-21%2B-orange)](https://www.java.com/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.1.4-brightgreen)](https://spring.io/projects/spring-boot)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
