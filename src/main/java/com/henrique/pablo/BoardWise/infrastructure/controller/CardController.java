@@ -27,7 +27,7 @@ public class CardController {
 
     //Retorna detalhes de um cartão.
     @GetMapping("/lists/{listId}/cards/{cardId}")
-    public CardResponse getCard(@PathVariable Integer listId,
+    public CardResponse getCardByList(@PathVariable Integer listId,
                                 @PathVariable String cardId,
                                 @RequestAttribute("id") String userId){
         return cardService.getCard(cardId, listId, userId);
@@ -42,6 +42,7 @@ public class CardController {
     ) {
         return cardService.update(listId, cardId, cardRequest, userId);
     }
+
     //Excluir um cartão.
     @DeleteMapping("/lists/{listId}/cards/{cardId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -62,6 +63,7 @@ public class CardController {
     ) {
         cardService.assignUserToCard(listId, cardId, userId, requesterId);
     }
+
     //Remove um usuário de um cartão.
     @DeleteMapping("/lists/{listId}/cards/{cardId}/assignee")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -76,7 +78,7 @@ public class CardController {
     //Move um cartão para outra lista.
     @PutMapping("/lists/{listId}/cards/{cardId}/move")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void moveCard(@PathVariable Integer listId,
+    public void moveCardToAnotherList(@PathVariable Integer listId,
                         @PathVariable String cardId,
                         @RequestParam Integer targetListId,
                         @RequestAttribute("id") String userId
