@@ -2,6 +2,7 @@ package com.henrique.pablo.BoardWise.infrastructure.security;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.henrique.pablo.BoardWise.domain.repository.IUserRepository;
+import com.henrique.pablo.BoardWise.infrastructure.persistence.converter.UserConverter;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.User;
 import com.henrique.pablo.BoardWise.shared.exception.UserNotFoundException;
 import com.henrique.pablo.BoardWise.shared.utils.TokenUtil;
@@ -51,7 +52,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String userId = decodedJWT.getSubject();
 
-        User user = userRepository.findByIdWithRoles(userId)
+        User user = userRepository.findByIdWithRoles(userId).map(UserConverter::toEntity)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + userId));
 
         setAuthenticationContext(request, user);

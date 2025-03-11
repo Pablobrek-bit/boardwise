@@ -37,8 +37,9 @@ public class UserRepositoryImpl implements IUserRepository {
     }
 
     @Override
-    public Optional<User> findByIdWithRoles(String id) {
-        return userJpaRepository.findByIdWithRoles(id);
+    public Optional<UserModel> findByIdWithRoles(String id) {
+        return userJpaRepository.findByIdWithRoles(id)
+                .map(UserConverter::toDomain);
     }
 
 }
