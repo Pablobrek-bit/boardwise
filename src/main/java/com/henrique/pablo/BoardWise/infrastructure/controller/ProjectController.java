@@ -33,13 +33,15 @@ public class ProjectController {
                                       @RequestParam(defaultValue = "asc") String direction,
                                       @RequestParam(defaultValue = "") String search,
                                       @RequestAttribute("id") String ownerId
-                                         ){
+                                      ){
         return projectService.listProjects(page, size, sort, direction, ownerId, search);
     }
 
     // Get a project by id.
     @GetMapping("/{id}")
-    public ProjectResponse findById(@PathVariable String id, @RequestAttribute("id") String ownerId){
+    public ProjectResponse findById(@PathVariable String id,
+                                    @RequestAttribute("id") String ownerId
+                                    ){
         return projectService.findProjectById(id, ownerId);
     }
 
@@ -60,7 +62,7 @@ public class ProjectController {
 
     // PROJECT MEMBERS
     @PostMapping("/{id}/members")
-    public ProjectResponseWithParticipants addMember(@PathVariable String id,
+    public ProjectResponseWithParticipants addMemberInTheProject(@PathVariable String id,
                                                      @RequestAttribute("id") String ownerId,
                                                      @RequestParam String memberId){
         return projectService.addMember(id, ownerId, memberId);
@@ -68,7 +70,7 @@ public class ProjectController {
 
     // Remove a member from the project.
     @PostMapping("/{id}/members/{memberId}")
-    public ProjectResponseWithParticipants removeMember(@PathVariable String id,
+    public ProjectResponseWithParticipants removeMemberFromTheProject(@PathVariable String id,
                                                         @PathVariable String memberId,
                                                         @RequestAttribute("id") String ownerId){
         return projectService.removeMember(id, memberId, ownerId);
@@ -76,7 +78,7 @@ public class ProjectController {
 
     // List all members of the project (with pagination).
     @GetMapping("/{id}/members")
-    public Page<UserResponse> listMembers(@PathVariable String id,
+    public Page<UserResponse> listMembersOfTheProject(@PathVariable String id,
                                                             @RequestParam(defaultValue = "0") int page,
                                                             @RequestParam(defaultValue = "10") int size,
                                                             @RequestParam(defaultValue = "id") String sort,
