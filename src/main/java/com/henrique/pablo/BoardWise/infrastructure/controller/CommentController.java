@@ -19,7 +19,7 @@ public class CommentController {
 
     // Adiciona um comentário a um card
     @PostMapping("/cards/{cardId}")
-    public CommentResponse createComment(@RequestAttribute("id") String userId,
+    public CommentResponse createCommentInTheCard(@RequestAttribute("id") String userId,
                                          @Valid @RequestBody CommentRequest commentRequest,
                                          @PathVariable String cardId ){
         return commentService.createComment(userId, commentRequest, cardId);
@@ -27,14 +27,14 @@ public class CommentController {
 
     // Lista todos os comentários de um card
     @GetMapping("/cards/{cardId}")
-    public List<CommentResponse> listComments(@PathVariable String cardId){
+    public List<CommentResponse> listCommentsByCard(@PathVariable String cardId){
         return commentService.listComments(cardId);
     }
 
     // Exclui um comentário de um card
     @DeleteMapping("/cards/{cardId}/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteComment(@PathVariable String cardId,
+    public void deleteCommentFromCard(@PathVariable String cardId,
                               @PathVariable String commentId,
                               @RequestAttribute("id") String userId){
         commentService.deleteComment(cardId, commentId, userId);
