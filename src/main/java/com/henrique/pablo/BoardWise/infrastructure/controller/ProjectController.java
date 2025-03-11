@@ -17,15 +17,12 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
-    // BASIC
-    // Create a new project.
     @PostMapping
     public ProjectResponse createProject(@RequestAttribute("id") String ownerId,
                                          @Valid @RequestBody ProjectRequest projectRequest){
         return projectService.createProject(ownerId, projectRequest);
     }
 
-    // List all projects (with pagination).
     @GetMapping
     public Page<ProjectResponse> findAll(@RequestParam(defaultValue = "0") int page,
                                       @RequestParam(defaultValue = "10") int size,
@@ -37,7 +34,6 @@ public class ProjectController {
         return projectService.listProjects(page, size, sort, direction, ownerId, search);
     }
 
-    // Get a project by id.
     @GetMapping("/{id}")
     public ProjectResponse findById(@PathVariable String id,
                                     @RequestAttribute("id") String ownerId
@@ -45,7 +41,6 @@ public class ProjectController {
         return projectService.findProjectById(id, ownerId);
     }
 
-    // Update a project
     @PutMapping("/{id}")
     public ProjectResponse updateProject(@PathVariable String id,
                                          @RequestAttribute("id") String ownerId,
@@ -53,14 +48,12 @@ public class ProjectController {
         return projectService.updateProject(id, ownerId, projectRequest);
     }
 
-    // Delete a project (soft delete).
     @DeleteMapping("/{id}")
     public ProjectResponse deleteProject(@PathVariable String id,
                                          @RequestAttribute("id") String ownerId){
         return projectService.deleteProject(id, ownerId);
     }
 
-    // PROJECT MEMBERS
     @PostMapping("/{id}/members")
     public ProjectResponseWithParticipants addMemberInTheProject(@PathVariable String id,
                                                      @RequestAttribute("id") String ownerId,
@@ -68,7 +61,6 @@ public class ProjectController {
         return projectService.addMember(id, ownerId, memberId);
     }
 
-    // Remove a member from the project.
     @PostMapping("/{id}/members/{memberId}")
     public ProjectResponseWithParticipants removeMemberFromTheProject(@PathVariable String id,
                                                         @PathVariable String memberId,
@@ -76,7 +68,6 @@ public class ProjectController {
         return projectService.removeMember(id, memberId, ownerId);
     }
 
-    // List all members of the project (with pagination).
     @GetMapping("/{id}/members")
     public Page<UserResponse> listMembersOfTheProject(@PathVariable String id,
                                                             @RequestParam(defaultValue = "0") int page,

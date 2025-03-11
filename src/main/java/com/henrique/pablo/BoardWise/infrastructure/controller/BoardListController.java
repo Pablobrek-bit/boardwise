@@ -18,7 +18,6 @@ public class BoardListController {
 
     private final BoardListService boardListService;
 
-    // Cria uma nova lista no projeto. (verificar se o usuário tem permissão para criar uma lista no projeto, verificar se o projeto existe)
     @PostMapping("/{projectId}")
     public BoardListResponse createBoardList(@PathVariable String projectId,
                                              @Valid @RequestBody BoardListRequest boardListRequest,
@@ -27,14 +26,12 @@ public class BoardListController {
         return boardListService.create(projectId, boardListRequest, userId);
     }
 
-    // Lista todas as listas do projeto.
     @GetMapping("/{projectId}")
     public List<BoardListResponse> listBoardListByProject(@PathVariable String projectId,
                                                  @RequestAttribute("id") String userId){
         return boardListService.list(projectId, userId);
     }
 
-    // Atualiza uma lista (ex: nome, posição).
     @PutMapping("/{projectId}/{boardListId}")
     public BoardListResponse updateBoardList(@PathVariable String projectId,
                                              @PathVariable Integer boardListId,
@@ -43,7 +40,7 @@ public class BoardListController {
     ) {
         return boardListService.update(projectId, boardListId, boardListRequestUpdate, userId);
     }
-    // Exclui uma lista.
+
     @DeleteMapping("/{projectId}/{boardListId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBoardList(@PathVariable String projectId,

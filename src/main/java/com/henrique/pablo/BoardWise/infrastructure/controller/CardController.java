@@ -16,7 +16,6 @@ public class CardController {
 
     private final CardService cardService;
 
-    //Cria um cartão na lista.
     @PostMapping("/lists/{listId}/cards")
     public CardResponse createCard(@PathVariable Integer listId,
                                    @Valid @RequestBody CardRequest cardRequest,
@@ -25,7 +24,6 @@ public class CardController {
         return cardService.create(listId, cardRequest, userId);
     }
 
-    //Retorna detalhes de um cartão.
     @GetMapping("/lists/{listId}/cards/{cardId}")
     public CardResponse getCardByList(@PathVariable Integer listId,
                                 @PathVariable String cardId,
@@ -33,7 +31,6 @@ public class CardController {
         return cardService.getCard(cardId, listId, userId);
     }
 
-    //Atualiza um cartão.
     @PutMapping("/lists/{listId}/cards/{cardId}")
     public CardResponse updateCard(@PathVariable Integer listId,
                                    @PathVariable String cardId,
@@ -43,7 +40,6 @@ public class CardController {
         return cardService.update(listId, cardId, cardRequest, userId);
     }
 
-    //Excluir um cartão.
     @DeleteMapping("/lists/{listId}/cards/{cardId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCard(@PathVariable Integer listId,
@@ -53,7 +49,6 @@ public class CardController {
         cardService.delete(listId, cardId, userId);
     }
 
-    //Atribui um usuário a um cartão.
     @PutMapping("/lists/{listId}/cards/{cardId}/assignee")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void assignUserToCard(@PathVariable Integer listId,
@@ -64,7 +59,6 @@ public class CardController {
         cardService.assignUserToCard(listId, cardId, userId, requesterId);
     }
 
-    //Remove um usuário de um cartão.
     @DeleteMapping("/lists/{listId}/cards/{cardId}/assignee")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeUserFromCard(@PathVariable Integer listId,
@@ -75,7 +69,6 @@ public class CardController {
         cardService.removeUserFromCard(listId, cardId, userId, requesterId);
     }
 
-    //Move um cartão para outra lista.
     @PutMapping("/lists/{listId}/cards/{cardId}/move")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void moveCardToAnotherList(@PathVariable Integer listId,
