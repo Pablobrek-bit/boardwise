@@ -7,8 +7,8 @@ import com.henrique.pablo.BoardWise.domain.model.RoleModel;
 import com.henrique.pablo.BoardWise.domain.model.UserModel;
 import com.henrique.pablo.BoardWise.domain.repository.IUserRepository;
 import com.henrique.pablo.BoardWise.shared.exception.EmailAlreadyExistsException;
-import com.henrique.pablo.BoardWise.shared.exception.IdNotFoundException;
 import com.henrique.pablo.BoardWise.shared.exception.RoleNotFoundException;
+import com.henrique.pablo.BoardWise.shared.exception.UserNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
@@ -131,8 +130,8 @@ class UserServiceTest {
     }
 
     @Test
-    void getUserById_MustThrowIdNotFoundExceptionWhenUserIsNotFound() {
-        Assertions.assertThrows(IdNotFoundException.class, () -> userService.getUserById(nonExistingId));
+    void getUserById_MustThrowUserNotFoundExceptionWhenUserIsNotFound() {
+        Assertions.assertThrows(UserNotFoundException.class, () -> userService.getUserById(nonExistingId));
     }
 
     @Test
@@ -157,8 +156,8 @@ class UserServiceTest {
     }
 
     @Test
-    void updateUser_MustThrowIdNotFoundExceptionWhenUserIsNotFound() {
-        Assertions.assertThrows(IdNotFoundException.class, () -> userService.updateUser(nonExistingId, new UserUpdateRequest("newusername", "newpassword", "newemail@gmail.com")));
+    void updateUser_MustThrowUserNotFoundExceptionWhenUserIsNotFound() {
+        Assertions.assertThrows(UserNotFoundException.class, () -> userService.updateUser(nonExistingId, new UserUpdateRequest("newusername", "newpassword", "newemail@gmail.com")));
     }
 
     @Test
