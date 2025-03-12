@@ -8,6 +8,7 @@ import com.henrique.pablo.BoardWise.infrastructure.persistence.converter.UserCon
 import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.Project;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.entity.User;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.repository.user.UserJpaRepository;
+import com.henrique.pablo.BoardWise.shared.exception.ProjectNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,10 +28,8 @@ public class ProjectRepositoryImpl implements IProjectRepository {
 
     @Override
     @Transactional
-    public ProjectModel save(String ownerId, ProjectModel projectModel) {
+    public ProjectModel save(ProjectModel projectModel) {
         Project project = ProjectConverter.toEntityWithoutParticipants(projectModel);
-        project.setOwner(User.builder().id(ownerId).build());
-
         project = projectJpaRepository.save(project);
 
         return ProjectConverter.toDomainWithoutParticipants(project);
@@ -67,11 +66,11 @@ public class ProjectRepositoryImpl implements IProjectRepository {
     @Transactional
     public ProjectModel addParticipant(String projectId, String participantId) {
         Project project = projectJpaRepository.findByIdWithParticipants(projectId)
-                .orElseThrow(() -> new RuntimeException("Project not found"));
+                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
 
-        User user = userJpaRepository.getReferenceById(participantId);
+        User newParticipant = User.builder().id(participantId).build();
 
-        project.addParticipant(user);
+        project.addParticipant(newParticipant);
 
         project = projectJpaRepository.save(project);
         return ProjectConverter.toDomain(project);
@@ -80,7 +79,7 @@ public class ProjectRepositoryImpl implements IProjectRepository {
     @Override
     public ProjectModel removeParticipant(String projectId, String participantId) {
         Project project = projectJpaRepository.findByIdWithParticipants(projectId)
-                .orElseThrow(() -> new RuntimeException("Project not found"));
+                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
 
         User user = userJpaRepository.getReferenceById(participantId);
 

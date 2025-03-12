@@ -29,8 +29,9 @@ public class ProjectService {
     @Transactional
     public ProjectResponse createProject(String ownerId, ProjectRequest projectRequest) {
         ProjectModel projectModel = ProjectConverter.requestToDomain(projectRequest);
+        projectModel.setOwner(UserModel.builder().id(ownerId).build());
 
-        ProjectModel savedProject = projectRepository.save(ownerId, projectModel);
+        ProjectModel savedProject = projectRepository.save(projectModel);
 
         return ProjectConverter.modelToResponse(savedProject);
     }
@@ -79,6 +80,8 @@ public class ProjectService {
         if (project.getParticipants().stream().anyMatch(user -> user.getId().equals(memberId))) {
             throw new ProjectNotFoundException("Project not found");
         }
+
+        // TODO: Add a check to see if the user exists
 
         ProjectModel updatedProject = projectRepository.addParticipant(id, memberId);
 

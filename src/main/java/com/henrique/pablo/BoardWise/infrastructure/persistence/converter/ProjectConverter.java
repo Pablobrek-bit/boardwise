@@ -46,6 +46,7 @@ public class ProjectConverter {
                 .id(model.getId())
                 .name(model.getName())
                 .description(model.getDescription())
+                .owner(model.getOwner() != null ? UserConverter.toEntity(model.getOwner()) : null)
                 .build();
     }
 
