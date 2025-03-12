@@ -56,11 +56,4 @@ public class Project {
         this.participants.remove(user);
         user.getParticipatingProjects().remove(this);
     }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
-        if(owner != null) {
-            owner.getProjects().add(this);
-        }
-    }
 }

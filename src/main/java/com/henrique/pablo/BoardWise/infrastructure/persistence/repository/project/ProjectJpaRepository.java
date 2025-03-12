@@ -17,7 +17,6 @@ public interface ProjectJpaRepository extends JpaRepository<Project, String> {
     @Query("SELECT p FROM Project p JOIN FETCH p.owner WHERE p.id = :projectId")
     Optional<Project> findByIdWithParticipants(String projectId);
 
-    //query para poder pegar apenas os participantes de um projeto
     @Query("SELECT p FROM Project p JOIN FETCH p.participants WHERE p.id = :projectId")
     Optional<Project> findByIdWithParticipantsOnly(String projectId);
 }
