@@ -1,5 +1,6 @@
 package com.henrique.pablo.BoardWise.infrastructure.persistence.converter;
 
+import com.henrique.pablo.BoardWise.application.dto.project.ProjectRequest;
 import com.henrique.pablo.BoardWise.application.dto.project.ProjectResponse;
 import com.henrique.pablo.BoardWise.application.dto.project.ProjectResponseWithParticipants;
 import com.henrique.pablo.BoardWise.domain.model.ProjectModel;
@@ -65,5 +66,12 @@ public class ProjectConverter {
                 model.getOwner().getId(),
                 model.getParticipants().stream().map(UserConverter::modelToSimpleReturn).collect(Collectors.toSet())
         );
+    }
+
+    public static ProjectModel requestToDomain(ProjectRequest projectRequest){
+        return ProjectModel.builder()
+                .name(projectRequest.name())
+                .description(projectRequest.description())
+                .build();
     }
 }

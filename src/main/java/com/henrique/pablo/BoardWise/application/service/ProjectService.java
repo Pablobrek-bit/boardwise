@@ -55,13 +55,7 @@ public class ProjectService {
     public ProjectResponse updateProject(String projectId, String ownerId, ProjectRequest projectRequest) {
         ProjectModel project = verifyIfTheProjectExistsAndUserBelong(projectRepository.findById(projectId), ownerId);
 
-        if(projectRequest.name() != null){
-            project.setName(projectRequest.name());
-        }
-
-        if(projectRequest.description() != null){
-            project.setDescription(projectRequest.description());
-        }
+        project.updateFields(projectRequest);
 
         ProjectModel updatedProject = projectRepository.update(project);
 
