@@ -11,13 +11,14 @@ import com.henrique.pablo.BoardWise.infrastructure.persistence.converter.Project
 import com.henrique.pablo.BoardWise.infrastructure.persistence.converter.UserConverter;
 import com.henrique.pablo.BoardWise.shared.exception.ProjectNotFoundException;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,11 +27,8 @@ public class ProjectService {
     private final IProjectRepository projectRepository;
 
     @Transactional
-    public ProjectResponse createProject(String ownerId, @Valid ProjectRequest projectRequest) {
-        ProjectModel projectModel = ProjectModel.builder()
-                .name(projectRequest.name())
-                .description(projectRequest.description())
-                .build();
+    public ProjectResponse createProject(String ownerId, ProjectRequest projectRequest) {
+        ProjectModel projectModel = ProjectConverter.requestToDomain(projectRequest);
 
         ProjectModel savedProject = projectRepository.save(ownerId, projectModel);
 
@@ -48,24 +46,14 @@ public class ProjectService {
     }
 
     public ProjectResponse findProjectById(String id, String ownerId) {
-        ProjectModel project = projectRepository.findById(id)
-                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
-
-        if (!project.getOwner().getId().equals(ownerId)) {
-            throw new ProjectNotFoundException("Project not found");
-        }
+        ProjectModel project = verifyIfTheProjectExistsAndUserBelong(projectRepository.findById(id), ownerId);
 
         return ProjectConverter.modelToResponse(project);
     }
 
     @Transactional
     public ProjectResponse updateProject(String projectId, String ownerId, ProjectRequest projectRequest) {
-        ProjectModel project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
-
-        if (!project.getOwner().getId().equals(ownerId)) {
-            throw new ProjectNotFoundException("Project not found");
-        }
+        ProjectModel project = verifyIfTheProjectExistsAndUserBelong(projectRepository.findById(projectId), ownerId);
 
         if(projectRequest.name() != null){
             project.setName(projectRequest.name());
@@ -82,12 +70,7 @@ public class ProjectService {
 
     @Transactional
     public ProjectResponse deleteProject(String id, String ownerId) {
-        ProjectModel project = projectRepository.findById(id)
-                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
-
-        if (!project.getOwner().getId().equals(ownerId)) {
-            throw new ProjectNotFoundException("Project not found");
-        }
+        ProjectModel project = verifyIfTheProjectExistsAndUserBelong(projectRepository.findById(id), ownerId);
 
         project.setDeleted(true);
         ProjectModel updatedProject = projectRepository.update(project);
@@ -97,12 +80,7 @@ public class ProjectService {
 
     @Transactional
     public ProjectResponseWithParticipants addMember(String id, String ownerId, String memberId) {
-        ProjectModel project = projectRepository.findByIdWithParticipants(id)
-                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
-
-        if (!project.getOwner().getId().equals(ownerId)) {
-            throw new ProjectNotFoundException("Project not found");
-        }
+        ProjectModel project = verifyIfTheProjectExistsAndUserBelong(projectRepository.findByIdWithParticipants(id), ownerId);
 
         if (project.getParticipants().stream().anyMatch(user -> user.getId().equals(memberId))) {
             throw new ProjectNotFoundException("Project not found");
@@ -115,12 +93,7 @@ public class ProjectService {
 
     @Transactional
     public ProjectResponseWithParticipants removeMember(String id, String memberId, String ownerId) {
-        ProjectModel project = projectRepository.findByIdWithParticipants(id)
-                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
-
-        if (!project.getOwner().getId().equals(ownerId)) {
-            throw new ProjectNotFoundException("Project not found");
-        }
+        ProjectModel project = verifyIfTheProjectExistsAndUserBelong(projectRepository.findByIdWithParticipants(id), ownerId);
 
         if (project.getParticipants().stream().noneMatch(user -> user.getId().equals(memberId))) {
             throw new ProjectNotFoundException("Project not found");
@@ -136,15 +109,21 @@ public class ProjectService {
                 Sort.by(direction.equalsIgnoreCase("asc") ? Sort.Direction.ASC :
                         Sort.Direction.DESC, sort));
 
-        ProjectModel project = projectRepository.findById(id)
-                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
-
-        if (!project.getOwner().getId().equals(ownerId)) {
-            throw new ProjectNotFoundException("Project not found");
-        }
+        verifyIfTheProjectExistsAndUserBelong(projectRepository.findById(id), ownerId);
 
         Page<UserModel> participants = projectRepository.listParticipants(id, pageable);
 
         return participants.map(UserConverter::modelToResponse);
     }
+
+    private ProjectModel verifyIfTheProjectExistsAndUserBelong(Optional<ProjectModel> projectRepository, String ownerId) {
+        ProjectModel project = projectRepository
+                .orElseThrow(() -> new ProjectNotFoundException("Project not found"));
+
+        if (!project.getOwner().getId().equals(ownerId)) {
+            throw new ProjectNotFoundException("Project not found");
+        }
+        return project;
+    }
+
 }
