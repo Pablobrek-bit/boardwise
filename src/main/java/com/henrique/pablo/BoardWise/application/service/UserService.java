@@ -3,12 +3,10 @@ package com.henrique.pablo.BoardWise.application.service;
 import com.henrique.pablo.BoardWise.application.dto.user.UserRequest;
 import com.henrique.pablo.BoardWise.application.dto.user.UserResponse;
 import com.henrique.pablo.BoardWise.application.dto.user.UserUpdateRequest;
-import com.henrique.pablo.BoardWise.domain.model.RoleModel;
 import com.henrique.pablo.BoardWise.domain.model.UserModel;
 import com.henrique.pablo.BoardWise.domain.repository.IUserRepository;
 import com.henrique.pablo.BoardWise.infrastructure.persistence.converter.UserConverter;
 import com.henrique.pablo.BoardWise.shared.exception.EmailAlreadyExistsException;
-import com.henrique.pablo.BoardWise.shared.exception.IdNotFoundException;
 import com.henrique.pablo.BoardWise.shared.exception.RoleNotFoundException;
 import com.henrique.pablo.BoardWise.shared.exception.UserNotFoundException;
 import jakarta.transaction.Transactional;
@@ -53,7 +51,7 @@ public class UserService {
             validateEmailUniqueness(request.email());
         }
 
-        updateUserFields(user, request);
+        user.updateFields(request, passwordEncoder);
         UserModel updatedUser = userRepository.save(user);
 
         return UserConverter.modelToResponse(updatedUser);
@@ -70,11 +68,4 @@ public class UserService {
         return UserConverter.requestToDomain(request, encodedPassword);
     }
 
-    private void updateUserFields(UserModel user, UserUpdateRequest request) {
-        Optional.ofNullable(request.username()).ifPresent(user::setUsername);
-        Optional.ofNullable(request.password()).ifPresent(pwd ->
-                user.setPasswordHash(passwordEncoder.encode(pwd))
-        );
-        Optional.ofNullable(request.email()).ifPresent(user::setEmail);
-    }
 }
