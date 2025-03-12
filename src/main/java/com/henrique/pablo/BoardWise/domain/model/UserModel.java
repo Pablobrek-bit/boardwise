@@ -32,4 +32,9 @@ public class UserModel {
         roles.add(role);
     }
 
+    public void assignDefaultRole(RoleModel role){
+        roles = new HashSet<>();
+        roles.add(role);
+    }
+
 }

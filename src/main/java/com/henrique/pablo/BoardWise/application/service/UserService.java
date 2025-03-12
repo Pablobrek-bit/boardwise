@@ -10,6 +10,7 @@ import com.henrique.pablo.BoardWise.infrastructure.persistence.converter.UserCon
 import com.henrique.pablo.BoardWise.shared.exception.EmailAlreadyExistsException;
 import com.henrique.pablo.BoardWise.shared.exception.IdNotFoundException;
 import com.henrique.pablo.BoardWise.shared.exception.RoleNotFoundException;
+import com.henrique.pablo.BoardWise.shared.exception.UserNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,7 +31,8 @@ public class UserService {
         validateEmailUniqueness(request.email());
 
         UserModel user = createUserModel(request);
-        assignDefaultRole(user);
+        user.assignDefaultRole(roleService.findByName("ROLE_USER")
+                .orElseThrow(() -> new RoleNotFoundException("Default role not found")));
 
         UserModel savedUser = userRepository.save(user);
         return UserConverter.modelToResponse(savedUser);
@@ -39,13 +41,13 @@ public class UserService {
     public UserResponse getUserById(String id){
         return userRepository.findById(id)
                 .map(UserConverter::modelToResponse)
-                .orElseThrow(() -> new IdNotFoundException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
     @Transactional
     public UserResponse updateUser(String id, UserUpdateRequest request) {
         UserModel user = userRepository.findById(id)
-                .orElseThrow(() -> new IdNotFoundException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         if(request.email() != null){
             validateEmailUniqueness(request.email());
@@ -66,12 +68,6 @@ public class UserService {
     private UserModel createUserModel(UserRequest request) {
         String encodedPassword = passwordEncoder.encode(request.password());
         return UserConverter.requestToDomain(request, encodedPassword);
-    }
-
-    private void assignDefaultRole(UserModel user) {
-        RoleModel defaultRole = roleService.findByName("ROLE_USER")
-                .orElseThrow(() -> new RoleNotFoundException("Default role not found"));
-        user.addRole(defaultRole);
     }
 
     private void updateUserFields(UserModel user, UserUpdateRequest request) {
